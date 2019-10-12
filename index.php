@@ -1,6 +1,6 @@
 <?php
 
-include_once 'Calculator.php'; //Incluimos la clase que esta en el archivo Calculator.php
+include_once 'Clases/Calculator.php'; //Incluimos la clase que esta en el archivo Calculator.php
 
 $clase = new Calculator(); //Esto se le llama instanciar una clase
 
