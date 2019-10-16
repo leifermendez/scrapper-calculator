@@ -281,13 +281,7 @@
 				return $contenido;
 			}			
 		}
-    }
-
-    $obj=new coordenadas;
-    $con=$obj->conexion();
-    $obj->promedioZona($con,'40.420612','-3.6898051');
-
-    
+    }   
 
  ?>
 
