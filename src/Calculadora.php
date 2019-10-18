@@ -88,24 +88,37 @@ class Calculadora
                             $values .= "0,";
                             $values_array[] = 0;
                         } else {
-                            $values_array[] = addslashes($data[$i]);
-                            $values .= "'".addslashes($data[$i])."',";
+
+                            if ($data[$i]=="TRUE" || $data[$i]=="FALSE") 
+                            {
+                                $values_array[] = $data[$i];
+                                $values.=$data[$i].",";
+                            }
+                            else
+                            {
+                                $values_array[] =utf8_decode(addslashes($data[$i]));
+                                $values .= "'".utf8_decode(addslashes($data[$i]))."',";
+                            }
+
+                            
                         }
                     }
                     if ((strlen($data[42])) <= 0) {
                         $values .= "0";
                         $values_array[] = 0;
                     } else {
-                        $values .= "'".addslashes($data[42])."'";
-                        $values_array[] = addslashes($data[42]);
+                        $values .= $data[42];
+                        $values_array[] = $data[42];
                     }//mysql_real_escape_string
 
                     $sql = "INSERT INTO {$this->table_name} values ({$values});";
                     $ok = $this->conexion->query($sql);
-                    $values = '';
+                    
                     $registers[] = $sql;
-                    var_dump($values_array);
-                    //echo "<br>" . $this->conexion->error . "<br>";
+
+                    print_r($values."<br>   <br>");
+                    // var_dump($values_array);
+                    echo "<br>" . $this->conexion->error . "<br>";$values = '';
                 }
             }
             fclose($archivo);
