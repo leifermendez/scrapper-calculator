@@ -1,0 +1,18 @@
+{
+  "name": "leifermendez/scrapper-calculator",
+  "description": "Generador de reporte, para obtener un promedio de zona y precio",
+  "authors": [
+    {
+      "name": "Leifer Mendez",
+      "email": "leifer33@gmail.com"
+    }
+  ],
+  "require": {
+    "ext-mysqli": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "leifermendez\\scrapper_calculator\\": "src/"
+    }
+  }
+}
