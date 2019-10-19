@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `apartaments` (
   `id` int(11) NOT NULL,
   `titulo` text COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
   `anunciante` text COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
-  `descripcion` text COLLATE utf8_spanish_ci NOT NULL,
+  `descripcion` text COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
   `reformado` tinyint(1) NOT NULL DEFAULT '0',
   `telefonos` text COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
   `fecha` varchar(12) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
