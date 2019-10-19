@@ -73,53 +73,69 @@ class Calculadora
                 throw new Exception('El archivo CSV no existe');
             }
 
-            $x = 0;
             $registers = array();
             $data = array();
             $archivo = fopen($fichero, "r");
             $values = '';
             $values_array = array();
 
+            $data=fgetcsv($archivo,10000);
+
+            $lt = array_search('﻿Latitud', $data);
+            $lg = array_search('Longitud', $data);
+            $hab = array_search('Habitaciones', $data);         
+            $ban = array_search('Baños', $data);
+            $tit = array_search('Titulo', $data);
+            $pre = array_search('Precio', $data);
+            $amu = array_search('Amueblado', $data);
+            $Id = array_search('ID', $data);
+                //latitud, longitud, id, titulo, precio, bano, habitaciones, amueblado
+            $num=array($lt,$lg,$Id,$tit,$pre,$ban,$hab,$amu);
+
+            $n=count($num);
+            $nn= $n-1;
+
             while (($data = fgetcsv($archivo, 10000)) == true) {
-                $x++;
-                if ($x > 1) {
-                    for ($i = 0; $i < 42; $i++) {
-                        if ((strlen($data[$i])) <= 0) {
-                            $values .= "0,";
-                            $values_array[] = 0;
-                        } else {
 
-                            if ($data[$i]=="TRUE" || $data[$i]=="FALSE") 
-                            {
-                                $values_array[] = $data[$i];
-                                $values.=$data[$i].",";
-                            }
-                            else
-                            {
-                                $values_array[] =utf8_decode(addslashes($data[$i]));
-                                $values .= "'".utf8_decode(addslashes($data[$i]))."',";
-                            }
+                for ($i = 0; $i < $nn; $i++) {
 
-                            
-                        }
-                    }
-                    if ((strlen($data[42])) <= 0) {
-                        $values .= "0";
+                    if ((strlen($data[$num[$i]]))<=0) {
+                        $values .= "0,";
                         $values_array[] = 0;
                     } else {
-                        $values .= $data[42];
-                        $values_array[] = $data[42];
-                    }//mysql_real_escape_string
 
-                    $sql = "INSERT INTO {$this->table_name} values ({$values});";
-                    $ok = $this->conexion->query($sql);
-                    
-                    $registers[] = $sql;
+                        if ($data[$num[$i]]=="TRUE" || $data[$num[$i]]=="FALSE") 
+                        {
+                            $values_array[] = $data[$num[$i]];
+                            $values.=$data[$num[$i]].",";
+                        }
+                        else
+                        {
+                            $values_array[] =utf8_decode(addslashes($data[$num[$i]]));
+                            $values .= "'".utf8_decode(addslashes($data[$num[$i]]))."',";
+                        }
 
-                    print_r($values."<br>   <br>");
-                    // var_dump($values_array);
-                    echo "<br>" . $this->conexion->error . "<br>";$values = '';
+                        
+                    }
                 }
+                if ((strlen($data[$num[$nn]]))<=0) {
+                    $values .= "0";
+                    $values_array[] = 0;
+                } else {
+                    $values .= $data[$num[$nn]];
+                    $values_array[] = $data[$num[$nn]];
+                }
+
+                //mysql_real_escape_string
+
+                $sql = "INSERT INTO {$this->table_name}(latitud, longitud, id, titulo, precio, bano, habitaciones, amueblado) values ({$values});";
+                $ok = $this->conexion->query($sql);
+                
+                $registers[] = $sql;
+                echo "<br><br><br>".$sql."<br>";
+                $values='';
+                // var_dump($values_array);
+                echo "<br>" . $this->conexion->error . "<br>";$values = '';
             }
             fclose($archivo);
         } catch (\Exception $e) {
