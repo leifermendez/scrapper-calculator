@@ -55,12 +55,14 @@ class Calculadora
                 $con->query($sql);
                 $sql = file_get_contents(__DIR__ . '/../src/sql/table_db.sql');
                 $result = $con->query($sql);
+                var_dump($result);
             }
 
 
             $this->conexion = $con;
 
         } catch (\Exception $e) {
+            var_dump($e->getMessage());
             return "Lo sentimos, este sitio web está experimentando problemas";
         }
 
@@ -83,7 +85,7 @@ class Calculadora
 
             $lt = array_search('﻿Latitud', $data);
             $lg = array_search('Longitud', $data);
-            $hab = array_search('Habitaciones', $data);         
+            $hab = array_search('Habitaciones', $data);
             $ban = array_search('Baños', $data);
             $tit = array_search('Titulo', $data);
             $pre = array_search('Precio', $data);
@@ -104,7 +106,7 @@ class Calculadora
                         $values_array[] = 0;
                     } else {
 
-                        if ($data[$num[$i]]=="TRUE" || $data[$num[$i]]=="FALSE") 
+                        if ($data[$num[$i]]=="TRUE" || $data[$num[$i]]=="FALSE")
                         {
                             $values_array[] = $data[$num[$i]];
                             $values.=$data[$num[$i]].",";
@@ -115,7 +117,7 @@ class Calculadora
                             $values .= "'".utf8_decode(addslashes($data[$num[$i]]))."',";
                         }
 
-                        
+
                     }
                 }
                 if ((strlen($data[$num[$nn]]))<=0) {
@@ -130,9 +132,9 @@ class Calculadora
 
                 $sql = "INSERT INTO {$this->table_name}(latitud, longitud, id, titulo, precio, bano, habitaciones, amueblado) values ({$values});";
                 $ok = $this->conexion->query($sql);
-                
+
                 $registers[] = $sql;
-                echo "<br><br><br>".$sql."<br>";
+                //echo "<br><br><br>".$sql."<br>";
                 $values='';
                 // var_dump($values_array);
                 echo "<br>" . $this->conexion->error . "<br>";$values = '';
