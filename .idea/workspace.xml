@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4d67f03b-9570-4c6b-ad59-bba3d4a5db1b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/scrapper-calculator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/scrapper-calculator.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/calcular_global.php" beforeDir="false" afterPath="$PROJECT_DIR$/example/calcular_global.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Calculadora.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Calculadora.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sql/table_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/sql/table_db.sql" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -38,6 +42,7 @@
   <component name="PhpWorkspaceProjectConfiguration">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/fpdf/fpdf" />
     </include_path>
   </component>
   <component name="ProjectId" id="1S6SEGJmIpkXcYaNIUGm2V5eziI" />
@@ -80,7 +85,8 @@
       <workItem from="1571334281298" duration="3380000" />
       <workItem from="1571337883169" duration="2846000" />
       <workItem from="1571340981433" duration="417000" />
-      <workItem from="1571511895131" duration="1900000" />
+      <workItem from="1571511895131" duration="2437000" />
+      <workItem from="1571514579725" duration="217000" />
     </task>
     <servers />
   </component>

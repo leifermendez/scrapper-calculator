@@ -8,6 +8,7 @@
 
 namespace leifermendez\scrapper_calculator;
 
+use Fpdf\Fpdf;
 use Exception;
 use mysqli;
 
@@ -21,6 +22,7 @@ class Calculadora
     private $conexion;
     private $database_name = 'idealista_csv';
     private $table_name = 'apartaments';
+    private $distance = 0.621371;
 
     /**
      * calculadora constructor.
@@ -81,7 +83,7 @@ class Calculadora
             $values = '';
             $values_array = array();
 
-            $data=fgetcsv($archivo,10000);
+            $data = fgetcsv($archivo, 10000);
 
             $lt = array_search('﻿Latitud', $data);
             $lg = array_search('Longitud', $data);
@@ -91,36 +93,33 @@ class Calculadora
             $pre = array_search('Precio', $data);
             $amu = array_search('Amueblado', $data);
             $Id = array_search('ID', $data);
-                //latitud, longitud, id, titulo, precio, bano, habitaciones, amueblado
-            $num=array($lt,$lg,$Id,$tit,$pre,$ban,$hab,$amu);
+            //latitud, longitud, id, titulo, precio, bano, habitaciones, amueblado
+            $num = array($lt, $lg, $Id, $tit, $pre, $ban, $hab, $amu);
 
-            $n=count($num);
-            $nn= $n-1;
+            $n = count($num);
+            $nn = $n - 1;
 
             while (($data = fgetcsv($archivo, 10000)) == true) {
 
                 for ($i = 0; $i < $nn; $i++) {
 
-                    if ((strlen($data[$num[$i]]))<=0) {
+                    if ((strlen($data[$num[$i]])) <= 0) {
                         $values .= "0,";
                         $values_array[] = 0;
                     } else {
 
-                        if ($data[$num[$i]]=="TRUE" || $data[$num[$i]]=="FALSE")
-                        {
+                        if ($data[$num[$i]] == "TRUE" || $data[$num[$i]] == "FALSE") {
                             $values_array[] = $data[$num[$i]];
-                            $values.=$data[$num[$i]].",";
-                        }
-                        else
-                        {
-                            $values_array[] =utf8_decode(addslashes($data[$num[$i]]));
-                            $values .= "'".utf8_decode(addslashes($data[$num[$i]]))."',";
+                            $values .= $data[$num[$i]] . ",";
+                        } else {
+                            $values_array[] = utf8_decode(addslashes($data[$num[$i]]));
+                            $values .= "'" . utf8_decode(addslashes($data[$num[$i]])) . "',";
                         }
 
 
                     }
                 }
-                if ((strlen($data[$num[$nn]]))<=0) {
+                if ((strlen($data[$num[$nn]])) <= 0) {
                     $values .= "0";
                     $values_array[] = 0;
                 } else {
@@ -135,9 +134,10 @@ class Calculadora
 
                 $registers[] = $sql;
                 //echo "<br><br><br>".$sql."<br>";
-                $values='';
+                $values = '';
                 // var_dump($values_array);
-                echo "<br>" . $this->conexion->error . "<br>";$values = '';
+                echo "<br>" . $this->conexion->error . "<br>";
+                $values = '';
             }
             fclose($archivo);
         } catch (\Exception $e) {
@@ -145,15 +145,15 @@ class Calculadora
         }
     }
 
-    private function calculatorGlobal($lat, $lon)
+    private function calculatorGlobal($lat, $lon, $out_type = 'pdf')
     {
         $sql = "SELECT *, 3956 * 2 * ASIN(SQRT(
 				POWER(SIN((" . $lat . " - abs(dest.latitud)) * pi()/180 / 2),
 				2) + COS(" . $lat . " * pi()/180 ) * COS(abs(dest.latitud) *
 				pi()/180) * POWER(SIN((" . $lon . " - dest.longitud) *
 				pi()/180 / 2), 2) )) as distance
-				FROM calculadora dest
-				having distance < 0.621371;";
+				FROM {$this->table_name} dest
+				having distance < {$this->distance};";
         $ok = $this->conexion->query($sql);
 
         $row = $this->conexion->affected_rows;
@@ -220,7 +220,12 @@ class Calculadora
                 $pdf->Cell(30, 8, round($dist, 4) . " Km", "B", 1, 'C');
             }
 
-            $pdf->Output();
+
+            if ($out_type === 'pdf') {
+                $filename = __DIR__ . '/../output/reporte_' . time() . '.pdf';
+                $pdf->Output($filename, 'F');
+            }
+
             $contenido = array();
             $ok = $this->conexion->query($sql);
             $k = 0;
@@ -233,7 +238,12 @@ class Calculadora
                 $k++;
             }
 
-            return $contenido;
+            if ($out_type === 'array') {
+                return $contenido;
+            } else {
+                return true;
+            }
+
         }
     }
 
@@ -256,8 +266,8 @@ class Calculadora
 				2) + COS(" . $lat . " * pi()/180 ) * COS(abs(dest.latitud) *
 				pi()/180) * POWER(SIN((" . $lon . " - dest.longitud) *
 				pi()/180 / 2), 2) )) as distance
-				FROM calculadora dest WHERE " . $where . " 				
-				having distance < 0.621371 ORDER BY distance ASC;";
+				FROM {$this->table_name} dest WHERE " . $where . " 				
+				having distance < {$this->distance} ORDER BY distance ASC;";
         $ok = $this->conexion->query($sql);
 
         $rows = $this->conexion->affected_rows;
