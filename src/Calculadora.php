@@ -237,7 +237,7 @@ class Calculadora
 
             $ok = $this->conexion->query($sql);
             while (($d = $ok->fetch_assoc()) > 0) {
-                $pdf->Cell(85, 8, utf8_decode($d['titulo']), "B", 0, 'J');
+                $pdf->Cell(85, 8, $d['titulo'], "B", 0, 'J');
                 $pdf->Cell(30, 8, $d['precio'] . " " . EURO, "B", 0, 'C');
                 $pdf->Cell(20, 8, $d['habitaciones'], "B", 0, 'C');
                 $pdf->Cell(15, 8, $d['metrosCuadrados'] . utf8_decode("²"), "B", 0, 'C');
@@ -350,7 +350,7 @@ class Calculadora
 
             $ok = $this->conexion->query($sql);
             while (($d = $ok->fetch_assoc()) > 0) {
-                $pdf->Cell(85, 8, utf8_decode($d['titulo']), "B", 0, 'J');
+                $pdf->Cell(85, 8, $d['titulo'], "B", 0, 'J');
                 $pdf->Cell(30, 8, $d['precio'] . " " . EURO, "B", 0, 'C');
                 $pdf->Cell(20, 8, $d['habitaciones'], "B", 0, 'C');
                 $pdf->Cell(15, 8, $d['metrosCuadrados'] . utf8_decode("²"), "B", 0, 'C');
