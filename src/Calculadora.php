@@ -420,7 +420,8 @@ class Calculadora
                 $prom = $precio / $row;
 
 
-            $pdf->Cell(270, 8, 'PROMEDIO DE PRECIO DE LA ZONA', 0, 1, 'C');
+            $pdf->Cell(270, 8, 'PROMEDIO DE PRECIO DE LA ZONA POR PRECIO', 'B', 1, 'C');
+            $pdf->Cell(270, 8, 'Precio Maximo: '.$max.' || Precio Minimo: '.$min, 0, 1, 'C');
             $pdf->Cell(270, 8, '', 0, 1, 'C');
 
             $pdf->Cell(135, 8, "Precio de la zona", "B", 0, 'C');
