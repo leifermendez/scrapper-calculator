@@ -188,7 +188,7 @@ class Calculadora
 				pi()/180) * POWER(SIN((" . $lon . " - dest.longitud) *
 				pi()/180 / 2), 2) )) as distance
 				FROM {$this->table_name} dest
-				having distance < ".$distancia.";";
+				having distance < ".$distancia." ORDER BY distance ASC;";
         $ok = $this->conexion->query($sql);
         // echo $this->$conexion->error."<br><br>";
         $row = $this->conexion->affected_rows;
@@ -272,7 +272,7 @@ class Calculadora
         }
     }
 
-    private function calculatorFilters($lat, $lon, $km, $array)
+    private function calculatorFilters($lat, $lon, $km, $array,$max,$min)
     {
         $distancia= $km * 0.62137;
         $row = sizeof($array);
@@ -384,7 +384,103 @@ class Calculadora
         }
     }
 
-    public function calculator($lat = null, $lng = null, $km=1, $filters = array())
+    private function calculatorPrecio($lat, $lon, $km, $max, $min)
+    {
+        $distancia= $km * 0.62137;
+        $sql = "SELECT *, 3956 * 2 * ASIN(SQRT(
+                POWER(SIN((" . $lat . " - abs(dest.latitud)) * pi()/180 / 2),
+                2) + COS(" . $lat . " * pi()/180 ) * COS(abs(dest.latitud) *
+                pi()/180) * POWER(SIN((" . $lon . " - dest.longitud) *
+                pi()/180 / 2), 2) )) as distance
+                FROM apartaments dest
+                having distance < ".$distancia." AND precio >".$min." AND precio <".$max." ORDER BY distance ASC;";
+        $ok = $this->conexion->query($sql);
+        // echo $this->$conexion->error."<br><br>";
+        $row = $this->conexion->affected_rows;
+        if ($row <= 0) {
+            echo "No existen apartamentos en las coordenadas indicadas";
+            die();
+        } else {
+            $precio = 0;
+            $prom = 0.0;
+            while (($dato = $ok->fetch_assoc()) > 0) {
+                $precio += $dato['precio'];
+            }
+
+            //ARCHIVO PDF
+            define('EURO', chr(128));
+            $pdf = new FPDF('L', 'mm', 'A4');
+
+            $pdf->AddPage();
+            $pdf->SetFont('Arial', '', 10);
+
+            if ($row <= 0)
+                $prom = 0;
+            else
+                $prom = $precio / $row;
+
+
+            $pdf->Cell(270, 8, 'PROMEDIO DE PRECIO DE LA ZONA', 0, 1, 'C');
+            $pdf->Cell(270, 8, '', 0, 1, 'C');
+
+            $pdf->Cell(135, 8, "Precio de la zona", "B", 0, 'C');
+            $pdf->Cell(135, 8, "Apartamentos en la zona", "B", 1, 'C');
+            $pdf->Cell(135, 8, round($prom, 2) . " " . EURO, 0, 0, 'C');
+            $pdf->Cell(135, 8, $row, 0, 1, 'C');
+            $pdf->Cell(270, 8, '', 0, 1, 'C');
+
+
+            $pdf->Cell(85, 8, "Titulo", "B", 0, 'C');
+            $pdf->Cell(30, 8, "Precio", "B", 0, 'C');
+            $pdf->Cell(15, 8, "Habitaciones", "B", 0, 'C');
+            $pdf->Cell(15, 8, utf8_decode("m²"), "B", 0, 'C');
+            $pdf->Cell(15, 8, utf8_decode("Baños"), "B", 0, 'C');
+            $pdf->Cell(20, 8, "Amueblado", "B", 0, 'C');
+            $pdf->Cell(30, 8, utf8_decode("Latitud"), "B", 0, 'C');
+            $pdf->Cell(30, 8, utf8_decode("Longitud"), "B", 0, 'C');
+            $pdf->Cell(30, 8, utf8_decode("Distancia"), "B", 1, 'C');
+
+            $ok = $this->conexion->query($sql);
+            while (($d = $ok->fetch_assoc()) > 0) {
+                $pdf->Cell(85, 8, $d['titulo'], "B", 0, 'J');
+                $pdf->Cell(30, 8, $d['precio'] . " " . EURO, "B", 0, 'C');
+                $pdf->Cell(20, 8, $d['habitaciones'], "B", 0, 'C');
+                $pdf->Cell(15, 8, $d['metrosCuadrados'] . utf8_decode("²"), "B", 0, 'C');
+                $pdf->Cell(15, 8, $d['bano'], "B", 0, 'C');
+
+                if ($d['amueblado'] == TRUE)
+                    $pdf->Cell(15, 8, "Si", "B", 0, 'C');
+                else
+                    $pdf->Cell(15, 8, "No", "B", 0, 'C');
+
+                $dist = $d['distance'] / 0.62137;
+
+                $pdf->Cell(30, 8, $d['latitud'], "B", 0, 'C');
+                $pdf->Cell(30, 8, $d['longitud'], "B", 0, 'C');
+                $pdf->Cell(30, 8, round($dist, 4) . " Km", "B", 1, 'C');
+            }
+
+            $pdf->Output();
+            $contenido = array();
+            $ok = $this->conexion->query($sql);
+            $k = 0;
+            $j = 0;
+            while (($var = $ok->fetch_assoc()) > 0) {
+                foreach ($var as $key => $value) {
+                    $contenido [$k][$j] = $key . " => " . $value;
+                    $j++;
+                }
+                $k++;
+            }
+
+            return $contenido;
+        }
+    }
+
+
+
+
+    public function calculator($lat = null, $lng = null, $km=1, $filters = array(), $max = null, $min = null)
     {
         try {
 
@@ -392,7 +488,10 @@ class Calculadora
 
             if (count($filters)) {
                 $response = $this->calculatorFilters($lat, $lng, $km, $filters);
-            } else {
+            } else if ($max && $min){
+                $response = $this->calculatorPrecio($lat, $lng, $km, $max, $min);
+            }
+            else {
                 $response = $this->calculatorGlobal($lat, $lng, $km);
             }
 
