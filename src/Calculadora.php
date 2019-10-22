@@ -83,14 +83,50 @@ class Calculadora
 
             $lt = array_search('﻿Latitud', $data);
             $lg = array_search('Longitud', $data);
-            $hab = array_search('Habitaciones', $data);         
-            $ban = array_search('Baños', $data);
-            $tit = array_search('Titulo', $data);
-            $pre = array_search('Precio', $data);
-            $amu = array_search('Amueblado', $data);
             $Id = array_search('ID', $data);
-                //latitud, longitud, id, titulo, precio, bano, habitaciones, amueblado
-            $num=array($lt,$lg,$Id,$tit,$pre,$ban,$hab,$amu);
+            $tit = array_search('Titulo', $data);
+            $anun = array_search('Anunciante', $data);
+            $desc = array_search('Descripcion', $data);
+            $refor = array_search('Reformado', $data);
+            $telf = array_search('Telefonos', $data);
+            $fec = array_search('Fecha', $data);
+            $tipo = array_search('Tipo', $data);
+            $pre = array_search('Precio', $data);
+            $preM = array_search('Precio por metro', $data);
+            $dire = array_search('Direccion', $data);
+            $prov = array_search('Provincia', $data);
+            $ciud = array_search('Ciudad', $data);
+            $calle = array_search('Calle', $data);
+            $barrio = array_search('Barrio', $data);
+            $dist = array_search('Distrito', $data);
+            $metroC = array_search('Metros cuadrados', $data);
+            $bano = array_search('Baños', $data);
+            $segM = array_search('Segunda mano', $data);
+            $armEm = array_search('Armarios Empotrados', $data);
+            $constEn = array_search('Construido en', $data);
+            $cocEda = array_search('Cocina Equipada', $data);
+            $amue = array_search('Amueblado', $data);
+            $cocEd = array_search('Cocina equipada', $data);
+            $certEng = array_search('Certificación energética', $data);
+            $planta = array_search('Planta', $data);
+            $ext = array_search('Exterior', $data);
+            $inte = array_search('Interior', $data);
+            $asce = array_search('Ascensor', $data);
+            $aireAc = array_search('Aire acondicionado', $data);
+            $hab = array_search('Habitaciones', $data);
+            $balc = array_search('Balcón', $data);
+            $tras = array_search('Trastero', $data);
+            $metroCU = array_search('Metros cuadrados útiles', $data);
+            $pisc = array_search('Piscina', $data);
+            $jard = array_search('Jardín', $data);
+            $park = array_search('Parking', $data);
+            $ter = array_search('Terraza', $data);
+            $calI = array_search('Calefacción individual', $data);
+            $movRed = array_search('Apto para personas con movilidad reducida', $data);
+            $masc = array_search('Se admiten mascotas', $data);
+
+            
+            $num=array($lt, $lg, $Id, $tit, $anun, $desc, $refor, $telf, $fec, $tipo, $pre, $preM, $dire, $prov, $ciud, $calle, $barrio, $dist, $metroC, $bano, $segM, $armEm, $constEn, $cocEda, $amue, $cocEd, $certEng, $planta, $ext, $inte, $asce, $aireAc, $hab, $balc, $tras, $metroCU, $pisc, $jard, $park, $ter, $calI, $movRed, $masc);
 
             $n=count($num);
             $nn= $n-1;
@@ -99,7 +135,7 @@ class Calculadora
 
                 for ($i = 0; $i < $nn; $i++) {
 
-                    if ((strlen($data[$num[$i]]))<=0) {
+                    if ((strlen($data[$num[$i]]))<=0 || $num[$i]===false) {
                         $values .= "0,";
                         $values_array[] = 0;
                     } else {
@@ -118,7 +154,7 @@ class Calculadora
                         
                     }
                 }
-                if ((strlen($data[$num[$nn]]))<=0) {
+                if ((strlen($data[$num[$nn]]))<=0 || $num[$i]===false) {
                     $values .= "0";
                     $values_array[] = 0;
                 } else {
@@ -128,11 +164,11 @@ class Calculadora
 
                 //mysql_real_escape_string
 
-                $sql = "INSERT INTO {$this->table_name}(latitud, longitud, id, titulo, precio, bano, habitaciones, amueblado) values ({$values});";
+                $sql = "INSERT INTO {$this->table_name}(latitud, longitud, id, titulo,anunciante,  descripcion, reformado, telefonos, fecha, tipo,  precio,precioMetro, direccion, provincia, ciudad, calle, barrio,distrito, metrosCuadrados, bano, segundaMano, armarioEmpotrado,  construidoEn,  cocinaEquipada,amueblado, cocinaEquipad, certificacionEnergetica, planta,exterior,  interior,  ascensor, aireAcondicionado, habitaciones, balcon,trastero, metrosCuadradosUtiles, piscina, jardin,parking, terraza, calefaccionIndividual, movilidadReducida, mascotas) values ({$values});";
                 $ok = $this->conexion->query($sql);
                 
                 $registers[] = $sql;
-                echo "<br><br><br>".$sql."<br>";
+                echo "<br><br>".$sql."<br><br>";
                 $values='';
                 // var_dump($values_array);
                 echo "<br>" . $this->conexion->error . "<br>";$values = '';
@@ -143,20 +179,21 @@ class Calculadora
         }
     }
 
-    private function calculatorGlobal($lat, $lon)
+    private function calculatorGlobal($lat, $lon, $km)
     {
+        $distancia= $km * 0.62137;
         $sql = "SELECT *, 3956 * 2 * ASIN(SQRT(
 				POWER(SIN((" . $lat . " - abs(dest.latitud)) * pi()/180 / 2),
 				2) + COS(" . $lat . " * pi()/180 ) * COS(abs(dest.latitud) *
 				pi()/180) * POWER(SIN((" . $lon . " - dest.longitud) *
 				pi()/180 / 2), 2) )) as distance
-				FROM calculadora dest
-				having distance < 0.621371;";
+				FROM {$this->table_name} dest
+				having distance < ".$distancia.";";
         $ok = $this->conexion->query($sql);
-
+        // echo $this->$conexion->error."<br><br>";
         $row = $this->conexion->affected_rows;
         if ($row <= 0) {
-            echo "No existen apartamentos en las calculadora indicadas";
+            echo "No existen apartamentos en las coordenadas indicadas";
             die();
         } else {
             $precio = 0;
@@ -235,8 +272,9 @@ class Calculadora
         }
     }
 
-    private function calculatorFilters($lat, $lon, $array)
+    private function calculatorFilters($lat, $lon, $km, $array)
     {
+        $distancia= $km * 0.62137;
         $row = sizeof($array);
         $where = '';
         $i = 0;
@@ -248,14 +286,13 @@ class Calculadora
             $i++;
         }
 
-
         $sql = "SELECT *, 3956 * 2 * ASIN(SQRT(
 				POWER(SIN((" . $lat . " - abs(dest.latitud)) * pi()/180 / 2),
 				2) + COS(" . $lat . " * pi()/180 ) * COS(abs(dest.latitud) *
 				pi()/180) * POWER(SIN((" . $lon . " - dest.longitud) *
 				pi()/180 / 2), 2) )) as distance
-				FROM calculadora dest WHERE " . $where . " 				
-				having distance < 0.621371 ORDER BY distance ASC;";
+				FROM {$this->table_name} dest WHERE " . $where . " 				
+				having distance < ".$distancia." ORDER BY distance ASC;";
         $ok = $this->conexion->query($sql);
 
         $rows = $this->conexion->affected_rows;
@@ -347,16 +384,16 @@ class Calculadora
         }
     }
 
-    public function calculator($lat = null, $lng = null, $filters = array())
+    public function calculator($lat = null, $lng = null, $km=1, $filters = array())
     {
         try {
 
             $response = array();
 
             if (count($filters)) {
-                $response = $this->calculatorFilters($lat, $lng, $filters);
+                $response = $this->calculatorFilters($lat, $lng, $km, $filters);
             } else {
-                $response = $this->calculatorGlobal($lat, $lng);
+                $response = $this->calculatorGlobal($lat, $lng, $km);
             }
 
             return $response;
