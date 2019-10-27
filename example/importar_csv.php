@@ -5,9 +5,9 @@ include __DIR__ . "/../vendor/autoload.php";
 use leifermendez\scrapper_calculator\Calculadora;
 
 $base_datos = array(
-    'server' => '127.0.0.1',
+    'server' => 'localhost',
     'user' => 'root',
-    'pwd' => 'Token.01',
+    'pwd' => '',
     'db' => 'idealista_csv'
 );
 $calculadora = new Calculadora($base_datos);
