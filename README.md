@@ -2,22 +2,28 @@
 
 Requisitos del sistema
 
-Estoy usando PHP en la version "7.3.8 " y mysqli version "10.4.6-MariaDB"
+PHP version "7.3.8 " 
+mysqli version "10.4.6-MariaDB"
 
 Para importar un archivo CSV:
 
 se hace llamado del metodo importCSV(direccion en que se encuentra el archivo CSV);
 De esta manera ya estaria realizada la importacion del archivo CSV en la base de datos
 
+Busqueda Global, Filters y Precio
 
-Para hacer una busqueda de una zona mediante coordenadas:
-.
-se hace llamado del metodo calculatorGlobal(Latitud,Longitud,Kilometros del radio a buscar los apartamentos); se pasan los parametos indicados,
-al hacer este llamado con los parametros indicados se ejecuta el metodo, creando un PDF donde se indican los apartamentos en la zona y el promedio de precio de la zona, de ser el caso en que no hayan apartamentos en la zona, se pintara: "No existen apartamentos en las coordenadas indicadas". este metodo retorna un array bidimencional con todos los datos de cada apartamento
+Se hace llamado del metodo calculator ($opc, $lat, $lon, $km, $array, $max, $min)
 
+$opc = 'opcion a ejecutar en el metodo ya sean ('global', 'filters', 'precio')'
+	'global' : Ejecuta un archivo PDF con valores correspondientes a los apartamentos que estan dentro del radio y las coordenadas especificadas
+	'filters' : Ejecuta un archivo PDF con valores correspondientes a los apartamentos que estan dentro del radio, coordenadas y el filtro especificado
+	'precio' : Ejecuta un archivo PDF con valores correspondientes a los apartamentos que estan dentro del radio, coordenadas y el precio maximo y minimo especificado
 
-Para hacer una busqueda de una zona mediante coordenadas y filtro:
-
-se hace llamado del metodo calculatorGlobalFilters(Latitud,Longitud,Kilometros del radio a buscar los apartamentos,$array); se pasan los parametos indicados,al hacer este llamado con los parametros indicados se ejecuta el metodo, creando un PDF donde se indican los apartamentos en la zona y el promedio de precio de la zona, de ser el caso en que no hayan apartamentos en la zona, se pintara: "No existen apartamentos en esta zona con el filtro añadido". este metodo retorna un array bidimencional con todos los datos de cada apartamento
-
-el $array que se pasa como parametro en el metodo lleva lo siguiente, array("atributo a buscar correspondiente a la base de datos" => valor a ser buscado, asi sucesivamente con todos los filtros a ser requeridos a busqueda)
+$lat = 'latitud'
+$lon = 'longitud'
+$km = 'kilometros del radio de busqueda'
+$array = lleva un array el cual es: array('filtro a buscar'=>'valor')
+		Filtros de busqueda correspondiente a la base de datos:
+	 	latitud, longitud, id,	titulo, anunciante,	descripcion, reformado,	telefonos, fecha,	tipo, precio, precioMetro, direccion, provincia, ciudad, calle, barrio,	distrito,	metrosCuadrados, bano, segundaMano,	armarioEmpotrado, construidoEn,	cocinaEquipada,	amueblado, cocinaEquipad, certificacionEnergetica, planta, exterior, interior, ascensor, aireAcondicionado,	habitaciones, balcon, trastero,	metrosCuadradosUtiles, piscina,	jardin,	parking, terraza, calefaccionIndividual, movilidadReducida,	mascotas
+$max = 'precio maximo de apartamentos a buscar'
+$min = 'precio minimo de apartamentos a buscar'
