@@ -12,6 +12,6 @@ $base_datos = array(
 );
 $calculadora = new Calculadora($base_datos);
 
-$fichero = __DIR__ . '/../src/csv/test.csv';
+$fichero = '../src/csv/2019-09-30T230344.101Z_alquiler-viviendas_madrid_moncloa_arguelles.csv';
 $res = $calculadora->importCSV($fichero);
 

@@ -4,8 +4,63 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4b6d9e181206246f44bc6478c9e2f4bf",
+    "content-hash": "096e42c9cf35f20dcbc5693ee7491e26",
     "packages": [
+        {
+            "name": "amenadiel/jpgraph",
+            "version": "3.6.21",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/HuasoFoundries/jpgraph.git",
+                "reference": "10aa8d7addfb1337c5f18c7e71faa6d7a9aa63aa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/HuasoFoundries/jpgraph/zipball/10aa8d7addfb1337c5f18c7e71faa6d7a9aa63aa",
+                "reference": "10aa8d7addfb1337c5f18c7e71faa6d7a9aa63aa",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "php": ">=5.6.0",
+                "symfony/dotenv": "~3.4"
+            },
+            "require-dev": {
+                "codeception/codeception": "~2.4.1",
+                "ext-xdebug": "*",
+                "friendsofphp/php-cs-fixer": "^2.4",
+                "kint-php/kint": "^2.2",
+                "monolog/monolog": "^1.23",
+                "php-console/php-console": "^3.1",
+                "phpunit/phpunit": "^6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Amenadiel\\JpGraph\\": "src/",
+                    "Amenadiel\\JpGraph\\Graph\\": "src/graph",
+                    "Amenadiel\\JpGraph\\Image\\": "src/image",
+                    "Amenadiel\\JpGraph\\Plot\\": "src/plot",
+                    "Amenadiel\\JpGraph\\Text\\": "src/text",
+                    "Amenadiel\\JpGraph\\Themes\\": "src/themes",
+                    "Amenadiel\\JpGraph\\Util\\": "src/util"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "QPL-1.0"
+            ],
+            "description": "jpGraph, library to make graphs and charts",
+            "homepage": "http://jpgraph.net/",
+            "keywords": [
+                "chart",
+                "data",
+                "graph",
+                "jpgraph",
+                "pie"
+            ],
+            "time": "2018-10-14T21:43:30+00:00"
+        },
         {
             "name": "fpdf/fpdf",
             "version": "1.81.2",
@@ -47,6 +102,63 @@
                 "wrapper"
             ],
             "time": "2018-10-25T10:38:10+00:00"
+        },
+        {
+            "name": "symfony/dotenv",
+            "version": "v3.4.32",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/dotenv.git",
+                "reference": "a61b9b493b0c92a789642201f96e1a5264f57a8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/dotenv/zipball/a61b9b493b0c92a789642201f96e1a5264f57a8d",
+                "reference": "a61b9b493b0c92a789642201f96e1a5264f57a8d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9|>=7.0.8"
+            },
+            "require-dev": {
+                "symfony/process": "~3.2|~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Dotenv\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Registers environment variables from a .env file",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "dotenv",
+                "env",
+                "environment"
+            ],
+            "time": "2019-08-14T11:59:53+00:00"
         }
     ],
     "packages-dev": [],
