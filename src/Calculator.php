@@ -45,10 +45,6 @@ class Calculator extends Settings
                 throw new Exception(self::$ERROR->ERROR_NOT_FOUND_FILE_CSV);
             }
             $data_file = $this->TOOLS->ReadCsv($file);
-            $sql_row = array();
-            $values = '';
-            $values_array = array();
-
 
             foreach (parent::$FIELDS as $key => $value) {
                 parent::$FIELDS[$key]['position'] = array_search($key, $data_file['data']);
@@ -62,53 +58,16 @@ class Calculator extends Settings
                 for ($index = 0; $index < $len; $index++) {
                     $this->TOOLS->SetValueField($index, $data[$index]);
                     $res_values = $this->TOOLS->GetAllValues();
-                    $res_values = implode(',',$res_values);
-                    $sql_row[] = "INSERT INTO {$this->table_name} ($fields_db) values ({$res_values});";
-                }
-
-                /*for ($i = 0; $i < $len; $i++) {
-
-                    if ((strlen($data[parent::$FIELDS[$i]])) <= 0 || parent::$FIELDS[$i] === false) {
-                        $values .= "0,";
-                        $values_array[] = 0;
-                    } else {
-
-                        if ($data[parent::$FIELDS[$i]] == "TRUE" || $data[parent::$FIELDS[$i]] == "FALSE") {
-                            $values_array[] = $data[parent::$FIELDS[$i]];
-                            $values .= $data[parent::$FIELDS[$i]] . ",";
-                        } else {
-                            $values_array[] = utf8_decode(addslashes($data[parent::$FIELDS[$i]]));
-                            $values .= "'" . utf8_decode(addslashes($data[parent::$FIELDS[$i]])) . "',";
-                        }
-
-
+                    $res_values = implode(',', $res_values);
+                    $sql = "INSERT INTO {$this->table_name} ($fields_db) values ({$res_values});";
+                    $this->connection->query($sql);
+                    if ($this->connection->error) {
+                        //error_log($sql . " \n", 3, 'LOG-ERROR.txt');
                     }
                 }
-                if ((strlen($data[parent::$FIELDS[$len]])) <= 0 || parent::$FIELDS[$i] === false) {
-                    $values .= "0";
-                    $values_array[] = 0;
-                } else {
-                    $values .= $data[parent::$FIELDS[$len]];
-                    $values_array[] = $data[parent::$FIELDS[$len]];
-                }*/
-
-                //mysql_real_escape_string
-
-                //$sql = "INSERT INTO {$this->table_name} (latitud, longitud, id, titulo,anunciante,  descripcion, reformado, telefonos, fecha, tipo,  precio,precioMetro, direccion, provincia, ciudad, calle, barrio,distrito, metrosCuadrados, bano, segundaMano, armarioEmpotrado,  construidoEn,  cocinaEquipada,amueblado, cocinaEquipad, certificacionEnergetica, planta,exterior,  interior,  ascensor, aireAcondicionado, habitaciones, balcon,trastero, metrosCuadradosUtiles, piscina, jardin,parking, terraza, calefaccionIndividual, movilidadReducida, mascotas) values ({$values});";
-                //$ok = $this->connection->query($sql);
-
-                //$registers[] = $sql;
-                //error_log($sql . " \n", 3, 'LOG-ERROR.txt');
-                // var_dump($this->connection->error);
-                $values = '';
-                // var_dump($values_array);
-                //echo "<br>" . $this->connection->error . "<br>";
-
             }
 
             fclose($data_file['data_file']);
-
-            var_dump($sql_row);
         } catch (\Exception $e) {
             return $e->getMessage();
         }
