@@ -6,7 +6,7 @@ use leifermendez\scrapper_calculator\Calculator;
 
 
 $calculadora = new Calculator();
-$calculadora->calculator('global', '40.4238647', '-3.700173', 1, array('bano'=>7), 1500, 500);
+$calculadora->calculator('global', '40.4238647', '-3.700173', 1000);
 
 //function calculator(opciones: global || filters || precio, 'latitud', 'longitud', radio de busqueda en Km, array('filtro'=>valor), 'Precio Max', 'Precio Min')
 

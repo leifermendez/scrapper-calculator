@@ -20,6 +20,9 @@ class Settings
     public static $DB_PORT = '3306';
     public static $DB_TABLE = 'apartaments';
 
+    public static $KM_DEFAULT = 1;
+    public static $KM_DEFAULT_INIT = 0.62137;
+
 
     /**
      * File CSV fields.

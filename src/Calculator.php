@@ -73,21 +73,14 @@ class Calculator extends Settings
         }
     }
 
-    function calculator($opc, $lat, $lon, $km = 1, $array = null, $max = null, $min = null)
+    public function Calculator($opc, $lat, $lon, $km = 1, $array = null, $max = null, $min = null)
     {
-        $distancia = $km * 0.62137;
+        $measure = floatval($km * parent::$KM_DEFAULT_INIT);
+
         switch ($opc) {
             case 'global':
-
-                $sql = "SELECT *, 3956 * 2 * ASIN(SQRT(
-                POWER(SIN((" . $lat . " - abs(dest.latitud)) * pi()/180 / 2),
-                2) + COS(" . $lat . " * pi()/180 ) * COS(abs(dest.latitud) *
-                pi()/180) * POWER(SIN((" . $lon . " - dest.longitud) *
-                pi()/180 / 2), 2) )) as distance
-                FROM {$this->table_name} dest
-                having distance < " . $distancia . " ORDER BY distance ASC;";
+                $sql = $this->TOOLS->SQLRange($lat, $lon, $measure);
                 $ok = $this->connection->query($sql);
-                // echo $this->$conexion->error."<br><br>";
                 $row = $this->connection->affected_rows;
                 if ($row <= 0) {
                     echo "No existen apartamentos en las coordenadas indicadas";
@@ -191,7 +184,7 @@ class Calculator extends Settings
                             pi()/180) * POWER(SIN((" . $lon . " - dest.longitud) *
                             pi()/180 / 2), 2) )) as distance
                             FROM {$this->table_name} dest WHERE " . $where . "              
-                            having distance < " . $distancia . " ORDER BY distance ASC;";
+                            having distance < " . $measure . " ORDER BY distance ASC;";
                     $ok = $this->connection->query($sql);
 
                     $rows = $this->connection->affected_rows;
@@ -296,7 +289,7 @@ class Calculator extends Settings
                     pi()/180) * POWER(SIN((" . $lon . " - dest.longitud) *
                     pi()/180 / 2), 2) )) as distance
                     FROM apartaments dest
-                    having distance < " . $distancia . " AND precio >" . $min . " AND precio <" . $max . " ORDER BY distance ASC;";
+                    having distance < " . $measure . " AND precio >" . $min . " AND precio <" . $max . " ORDER BY distance ASC;";
                     $ok = $this->connection->query($sql);
                     // echo $this->$conexion->error."<br><br>";
                     $row = $this->connection->affected_rows;
