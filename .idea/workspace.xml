@@ -2,13 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4d67f03b-9570-4c6b-ad59-bba3d4a5db1b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Calculadora.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/csv/2019-10-02T071802.756Z_alquiler-viviendas_madrid_villa-de-vallecas_ensanche-de-vallecas-la-gavia.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Chart.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Errores.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Settings.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Tools.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/scrapper-calculator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/scrapper-calculator.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Clases/Calculator.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Clases/coordenadas.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/coordenadas.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/sql/table_db.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/calculator.php" beforeDir="false" afterPath="$PROJECT_DIR$/example/calculator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/calculator_grafica.php" beforeDir="false" afterPath="$PROJECT_DIR$/example/calculator_grafica.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/importar_csv.php" beforeDir="false" afterPath="$PROJECT_DIR$/example/importar_csv.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Calculadora.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Calculator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pdfgrafica.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/amueblado.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/amueblado_pre.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/banos.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/banos_pre.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/habitaciones.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/habitaciones_pre.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/precio_filtro.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/precios.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sql/table_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/sql/table_db.sql" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,6 +59,9 @@
   <component name="PhpWorkspaceProjectConfiguration">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/fpdf/fpdf" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dotenv" />
+      <path value="$PROJECT_DIR$/vendor/amenadiel/jpgraph" />
     </include_path>
   </component>
   <component name="ProjectId" id="1S6SEGJmIpkXcYaNIUGm2V5eziI" />
@@ -49,13 +69,17 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/csv" />
     <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/sql" />
       <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/sql" />
       <recent name="$PROJECT_DIR$/Clases" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/csv" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -84,6 +108,9 @@
       <workItem from="1571334281298" duration="3380000" />
       <workItem from="1571337883169" duration="2846000" />
       <workItem from="1571340981433" duration="417000" />
+      <workItem from="1572600698892" duration="1970000" />
+      <workItem from="1572605999453" duration="2600000" />
+      <workItem from="1572608861833" duration="9083000" />
     </task>
     <servers />
   </component>

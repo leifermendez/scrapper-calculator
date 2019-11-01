@@ -2,16 +2,11 @@
 
 include __DIR__ . "/../vendor/autoload.php";
 
-use leifermendez\scrapper_calculator\Calculadora;
+use leifermendez\scrapper_calculator\Calculator;
 
-$base_datos = array(
-    'server' => 'localhost',
-    'user' => 'root',
-    'pwd' => '',
-    'db' => 'idealista_csv'
-);
-$calculadora = new Calculadora($base_datos);
 
-$fichero = '../src/csv/2019-09-30T230344.101Z_alquiler-viviendas_madrid_moncloa_arguelles.csv';
+$calculadora = new Calculator();
+
+$fichero = __DIR__ . '/../csv/2019-10-02T071802.756Z_alquiler-viviendas_madrid_villa-de-vallecas_ensanche-de-vallecas-la-gavia.csv';
 $res = $calculadora->importCSV($fichero);
 

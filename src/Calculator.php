@@ -11,177 +11,112 @@ namespace leifermendez\scrapper_calculator;
 use Exception;
 use mysqli;
 use Fpdf\Fpdf;
+use leifermendez\scrapper_calculator\Tools;
+use leifermendez\scrapper_calculator\Errores;
 
-class Calculadora
+class Calculator extends Settings
 {
-    /**
-     * Declaramos las variables
-     */
+    public static $ERROR;
 
-    private $version = 1.0;
-    private $conexion;
-    private $database_name = 'idealista_csv';
-    private $table_name = 'apartaments';
+    public $connection;
+    public $db_name;
+    public $table_name;
+    public $TOOLS;
 
-    /**
-     * calculadora constructor.
-     * Conexion con el BD
-     */
-    public function __construct($db_opciones = array())
+    public function __construct()
     {
+        $this->connection = parent::__construct();
+
         try {
-
-            $db_default = array(
-                'server' => 'localhost',
-                'user' => 'root',
-                'pwd' => '',
-                'db' => $this->database_name
-            );
-
-            $db_default = array_merge($db_default, $db_opciones);
-
-            $con = new mysqli (
-                $db_default['server'],
-                $db_default['user'],
-                $db_default['pwd'],
-                $db_default['db']
-            );
-            // Check if table exists
-            $sql = "SELECT * FROM {$db_default['db']}.{$this->table_name}";
-            $result = $con->query($sql);
-
-            if (!$result) {
-                $con->query('USE ' . $this->database_name . ';');
-                $con->query($sql);
-                $sql = file_get_contents(__DIR__ . '/../src/sql/table_db.sql');
-                $result = $con->query($sql);
-            }
-
-
-            $this->conexion = $con;
+            $this->db_name = parent::$DB_NAME;
+            $this->table_name = parent::$DB_TABLE;
+            $this->TOOLS = new Tools();
 
         } catch (\Exception $e) {
-            return "Lo sentimos, este sitio web está experimentando problemas";
+            return self::$ERROR->ERROR_CONNECTION_DB;
         }
 
     }
 
-    public function importCSV($fichero)
+    public function importCSV($file)
     {
         try {
-            if (!file_exists($fichero)) {
-                throw new Exception('El archivo CSV no existe');
+            if (!file_exists($file)) {
+                throw new Exception(self::$ERROR->ERROR_NOT_FOUND_FILE_CSV);
             }
-
-            $registers = array();
-            $data = array();
-            $archivo = fopen($fichero, "r");
+            $data_file = $this->TOOLS->ReadCsv($file);
+            $sql_row = array();
             $values = '';
             $values_array = array();
 
-            $data=fgetcsv($archivo,10000);
 
-            $lt = array_search('﻿Latitud', $data);
-            $lg = array_search('Longitud', $data);
-            $Id = array_search('ID', $data);
-            $tit = array_search('Titulo', $data);
-            $anun = array_search('Anunciante', $data);
-            $desc = array_search('Descripcion', $data);
-            $refor = array_search('Reformado', $data);
-            $telf = array_search('Telefonos', $data);
-            $fec = array_search('Fecha', $data);
-            $tipo = array_search('Tipo', $data);
-            $pre = array_search('Precio', $data);
-            $preM = array_search('Precio por metro', $data);
-            $dire = array_search('Direccion', $data);
-            $prov = array_search('Provincia', $data);
-            $ciud = array_search('Ciudad', $data);
-            $calle = array_search('Calle', $data);
-            $barrio = array_search('Barrio', $data);
-            $dist = array_search('Distrito', $data);
-            $metroC = array_search('Metros cuadrados', $data);
-            $bano = array_search('Baños', $data);
-            $segM = array_search('Segunda mano', $data);
-            $armEm = array_search('Armarios Empotrados', $data);
-            $constEn = array_search('Construido en', $data);
-            $cocEda = array_search('Cocina Equipada', $data);
-            $amue = array_search('Amueblado', $data);
-            $cocEd = array_search('Cocina equipada', $data);
-            $certEng = array_search('Certificación energética', $data);
-            $planta = array_search('Planta', $data);
-            $ext = array_search('Exterior', $data);
-            $inte = array_search('Interior', $data);
-            $asce = array_search('Ascensor', $data);
-            $aireAc = array_search('Aire acondicionado', $data);
-            $hab = array_search('Habitaciones', $data);
-            $balc = array_search('Balcón', $data);
-            $tras = array_search('Trastero', $data);
-            $metroCU = array_search('Metros cuadrados útiles', $data);
-            $pisc = array_search('Piscina', $data);
-            $jard = array_search('Jardín', $data);
-            $park = array_search('Parking', $data);
-            $ter = array_search('Terraza', $data);
-            $calI = array_search('Calefacción individual', $data);
-            $movRed = array_search('Apto para personas con movilidad reducida', $data);
-            $masc = array_search('Se admiten mascotas', $data);
+            foreach (parent::$FIELDS as $key => $value) {
+                parent::$FIELDS[$key]['position'] = array_search($key, $data_file['data']);
 
-            
-            $num=array($lt, $lg, $Id, $tit, $anun, $desc, $refor, $telf, $fec, $tipo, $pre, $preM, $dire, $prov, $ciud, $calle, $barrio, $dist, $metroC, $bano, $segM, $armEm, $constEn, $cocEda, $amue, $cocEd, $certEng, $planta, $ext, $inte, $asce, $aireAc, $hab, $balc, $tras, $metroCU, $pisc, $jard, $park, $ter, $calI, $movRed, $masc);
+            }
 
-            $n=count($num);
-            $nn= $n-1;
+            $len = count(parent::$FIELDS) - 1;
+            $fields_db = implode(',', parent::$FIELDS_DB);
+            while (($data = fgetcsv($data_file['data_file'], 10000)) == true) {
+                $data = array_map("utf8_encode", $data);
+                for ($index = 0; $index < $len; $index++) {
+                    $this->TOOLS->SetValueField($index, $data[$index]);
+                    $res_values = $this->TOOLS->GetAllValues();
+                    $res_values = implode(',',$res_values);
+                    $sql_row[] = "INSERT INTO {$this->table_name} ($fields_db) values ({$res_values});";
+                }
 
-            while (($data = fgetcsv($archivo, 10000)) == true) {
+                /*for ($i = 0; $i < $len; $i++) {
 
-                for ($i = 0; $i < $nn; $i++) {
-
-                    if ((strlen($data[$num[$i]]))<=0 || $num[$i]===false) {
+                    if ((strlen($data[parent::$FIELDS[$i]])) <= 0 || parent::$FIELDS[$i] === false) {
                         $values .= "0,";
                         $values_array[] = 0;
                     } else {
 
-                        if ($data[$num[$i]]=="TRUE" || $data[$num[$i]]=="FALSE") 
-                        {
-                            $values_array[] = $data[$num[$i]];
-                            $values.=$data[$num[$i]].",";
-                        }
-                        else
-                        {
-                            $values_array[] =utf8_decode(addslashes($data[$num[$i]]));
-                            $values .= "'".utf8_decode(addslashes($data[$num[$i]]))."',";
+                        if ($data[parent::$FIELDS[$i]] == "TRUE" || $data[parent::$FIELDS[$i]] == "FALSE") {
+                            $values_array[] = $data[parent::$FIELDS[$i]];
+                            $values .= $data[parent::$FIELDS[$i]] . ",";
+                        } else {
+                            $values_array[] = utf8_decode(addslashes($data[parent::$FIELDS[$i]]));
+                            $values .= "'" . utf8_decode(addslashes($data[parent::$FIELDS[$i]])) . "',";
                         }
 
-                        
+
                     }
                 }
-                if ((strlen($data[$num[$nn]]))<=0 || $num[$i]===false) {
+                if ((strlen($data[parent::$FIELDS[$len]])) <= 0 || parent::$FIELDS[$i] === false) {
                     $values .= "0";
                     $values_array[] = 0;
                 } else {
-                    $values .= $data[$num[$nn]];
-                    $values_array[] = $data[$num[$nn]];
-                }
+                    $values .= $data[parent::$FIELDS[$len]];
+                    $values_array[] = $data[parent::$FIELDS[$len]];
+                }*/
 
                 //mysql_real_escape_string
 
-                $sql = "INSERT INTO {$this->table_name}(latitud, longitud, id, titulo,anunciante,  descripcion, reformado, telefonos, fecha, tipo,  precio,precioMetro, direccion, provincia, ciudad, calle, barrio,distrito, metrosCuadrados, bano, segundaMano, armarioEmpotrado,  construidoEn,  cocinaEquipada,amueblado, cocinaEquipad, certificacionEnergetica, planta,exterior,  interior,  ascensor, aireAcondicionado, habitaciones, balcon,trastero, metrosCuadradosUtiles, piscina, jardin,parking, terraza, calefaccionIndividual, movilidadReducida, mascotas) values ({$values});";
-                $ok = $this->conexion->query($sql);
-                
-                $registers[] = $sql;
-                echo "<br><br>".$sql."<br><br>";
-                $values='';
+                //$sql = "INSERT INTO {$this->table_name} (latitud, longitud, id, titulo,anunciante,  descripcion, reformado, telefonos, fecha, tipo,  precio,precioMetro, direccion, provincia, ciudad, calle, barrio,distrito, metrosCuadrados, bano, segundaMano, armarioEmpotrado,  construidoEn,  cocinaEquipada,amueblado, cocinaEquipad, certificacionEnergetica, planta,exterior,  interior,  ascensor, aireAcondicionado, habitaciones, balcon,trastero, metrosCuadradosUtiles, piscina, jardin,parking, terraza, calefaccionIndividual, movilidadReducida, mascotas) values ({$values});";
+                //$ok = $this->connection->query($sql);
+
+                //$registers[] = $sql;
+                //error_log($sql . " \n", 3, 'LOG-ERROR.txt');
+                // var_dump($this->connection->error);
+                $values = '';
                 // var_dump($values_array);
-                echo "<br>" . $this->conexion->error . "<br>";$values = '';
+                //echo "<br>" . $this->connection->error . "<br>";
+
             }
-            fclose($archivo);
+
+            fclose($data_file['data_file']);
+
+            var_dump($sql_row);
         } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
 
-     function calculator($opc, $lat, $lon, $km=1, $array=null, $max=null, $min=null)
+    function calculator($opc, $lat, $lon, $km = 1, $array = null, $max = null, $min = null)
     {
-        $distancia= $km * 0.62137;
+        $distancia = $km * 0.62137;
         switch ($opc) {
             case 'global':
 
@@ -191,10 +126,10 @@ class Calculadora
                 pi()/180) * POWER(SIN((" . $lon . " - dest.longitud) *
                 pi()/180 / 2), 2) )) as distance
                 FROM {$this->table_name} dest
-                having distance < ".$distancia." ORDER BY distance ASC;";
-                $ok = $this->conexion->query($sql);
+                having distance < " . $distancia . " ORDER BY distance ASC;";
+                $ok = $this->connection->query($sql);
                 // echo $this->$conexion->error."<br><br>";
-                $row = $this->conexion->affected_rows;
+                $row = $this->connection->affected_rows;
                 if ($row <= 0) {
                     echo "No existen apartamentos en las coordenadas indicadas";
                     die();
@@ -238,7 +173,7 @@ class Calculadora
                     $pdf->Cell(30, 8, utf8_decode("Longitud"), "B", 0, 'C');
                     $pdf->Cell(30, 8, utf8_decode("Distancia"), "B", 1, 'C');
 
-                    $ok = $this->conexion->query($sql);
+                    $ok = $this->connection->query($sql);
                     while (($d = $ok->fetch_assoc()) > 0) {
                         $pdf->Cell(85, 8, $d['titulo'], "B", 0, 'J');
                         $pdf->Cell(30, 8, $d['precio'] . " " . EURO, "B", 0, 'C');
@@ -260,7 +195,7 @@ class Calculadora
 
                     $pdf->Output();
                     $contenido = array();
-                    $ok = $this->conexion->query($sql);
+                    $ok = $this->connection->query($sql);
                     $k = 0;
                     $j = 0;
                     while (($var = $ok->fetch_assoc()) > 0) {
@@ -277,10 +212,9 @@ class Calculadora
 
             case 'filters':
 
-                if (count($array)<=0) {
+                if (count($array) <= 0) {
                     echo "Filtro invalido!";
-                }
-                else {
+                } else {
                     $row = sizeof($array);
                     $where = '';
                     $i = 0;
@@ -298,10 +232,10 @@ class Calculadora
                             pi()/180) * POWER(SIN((" . $lon . " - dest.longitud) *
                             pi()/180 / 2), 2) )) as distance
                             FROM {$this->table_name} dest WHERE " . $where . "              
-                            having distance < ".$distancia." ORDER BY distance ASC;";
-                    $ok = $this->conexion->query($sql);
+                            having distance < " . $distancia . " ORDER BY distance ASC;";
+                    $ok = $this->connection->query($sql);
 
-                    $rows = $this->conexion->affected_rows;
+                    $rows = $this->connection->affected_rows;
 
                     //verificacion de que exista en la base de datos la consulta
                     if ($rows <= 0) {
@@ -354,7 +288,7 @@ class Calculadora
                         $pdf->Cell(30, 8, utf8_decode("Longitud"), "B", 0, 'C');
                         $pdf->Cell(30, 8, utf8_decode("Distancia"), "B", 1, 'C');
 
-                        $ok = $this->conexion->query($sql);
+                        $ok = $this->connection->query($sql);
                         while (($d = $ok->fetch_assoc()) > 0) {
                             $pdf->Cell(85, 8, $d['titulo'], "B", 0, 'J');
                             $pdf->Cell(30, 8, $d['precio'] . " " . EURO, "B", 0, 'C');
@@ -376,7 +310,7 @@ class Calculadora
                         $pdf->Output();
 
                         $contenido = array();
-                        $ok = $this->conexion->query($sql);
+                        $ok = $this->connection->query($sql);
                         $k = 0;
                         $j = 0;
                         while (($var = $ok->fetch_assoc()) > 0) {
@@ -388,16 +322,14 @@ class Calculadora
                         }
                         return $contenido;
                     }
-                }                
+                }
                 break;
 
             case 'precio':
 
-                if (!$min && !$max) 
-                {
+                if (!$min && !$max) {
                     echo "No se ha especificado el precio minimo y precio maximo";
-                }
-                else {
+                } else {
 
                     $sql = "SELECT *, 3956 * 2 * ASIN(SQRT(
                     POWER(SIN((" . $lat . " - abs(dest.latitud)) * pi()/180 / 2),
@@ -405,10 +337,10 @@ class Calculadora
                     pi()/180) * POWER(SIN((" . $lon . " - dest.longitud) *
                     pi()/180 / 2), 2) )) as distance
                     FROM apartaments dest
-                    having distance < ".$distancia." AND precio >".$min." AND precio <".$max." ORDER BY distance ASC;";
-                    $ok = $this->conexion->query($sql);
+                    having distance < " . $distancia . " AND precio >" . $min . " AND precio <" . $max . " ORDER BY distance ASC;";
+                    $ok = $this->connection->query($sql);
                     // echo $this->$conexion->error."<br><br>";
-                    $row = $this->conexion->affected_rows;
+                    $row = $this->connection->affected_rows;
                     if ($row <= 0) {
                         echo "No existen apartamentos en las coordenadas indicadas Con el precio especificado";
                         die();
@@ -433,7 +365,7 @@ class Calculadora
 
 
                         $pdf->Cell(270, 8, 'PROMEDIO DE PRECIO DE LA ZONA POR PRECIO', 'B', 1, 'C');
-                        $pdf->Cell(270, 8, 'Precio Maximo: '.$max.' || Precio Minimo: '.$min, 0, 1, 'C');
+                        $pdf->Cell(270, 8, 'Precio Maximo: ' . $max . ' || Precio Minimo: ' . $min, 0, 1, 'C');
                         $pdf->Cell(270, 8, '', 0, 1, 'C');
 
                         $pdf->Cell(135, 8, "Precio de la zona", "B", 0, 'C');
@@ -453,7 +385,7 @@ class Calculadora
                         $pdf->Cell(30, 8, utf8_decode("Longitud"), "B", 0, 'C');
                         $pdf->Cell(30, 8, utf8_decode("Distancia"), "B", 1, 'C');
 
-                        $ok = $this->conexion->query($sql);
+                        $ok = $this->connection->query($sql);
                         while (($d = $ok->fetch_assoc()) > 0) {
                             $pdf->Cell(85, 8, $d['titulo'], "B", 0, 'J');
                             $pdf->Cell(30, 8, $d['precio'] . " " . EURO, "B", 0, 'C');
@@ -475,7 +407,7 @@ class Calculadora
 
                         $pdf->Output();
                         $contenido = array();
-                        $ok = $this->conexion->query($sql);
+                        $ok = $this->connection->query($sql);
                         $k = 0;
                         $j = 0;
                         while (($var = $ok->fetch_assoc()) > 0) {
@@ -487,10 +419,10 @@ class Calculadora
                         }
 
                         return $contenido;
-                    } 
-                }               
+                    }
+                }
                 break;
-            
+
             default:
                 echo utf8_decode("Opción invalida!!");
                 break;
