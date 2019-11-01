@@ -1,0 +1,175 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "cf6a0d09110ca1f0a7c56dec551aa79f",
+    "packages": [
+        {
+            "name": "amenadiel/jpgraph",
+            "version": "3.6.21",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/HuasoFoundries/jpgraph.git",
+                "reference": "10aa8d7addfb1337c5f18c7e71faa6d7a9aa63aa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/HuasoFoundries/jpgraph/zipball/10aa8d7addfb1337c5f18c7e71faa6d7a9aa63aa",
+                "reference": "10aa8d7addfb1337c5f18c7e71faa6d7a9aa63aa",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "php": ">=5.6.0",
+                "symfony/dotenv": "~3.4"
+            },
+            "require-dev": {
+                "codeception/codeception": "~2.4.1",
+                "ext-xdebug": "*",
+                "friendsofphp/php-cs-fixer": "^2.4",
+                "kint-php/kint": "^2.2",
+                "monolog/monolog": "^1.23",
+                "php-console/php-console": "^3.1",
+                "phpunit/phpunit": "^6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Amenadiel\\JpGraph\\": "src/",
+                    "Amenadiel\\JpGraph\\Graph\\": "src/graph",
+                    "Amenadiel\\JpGraph\\Image\\": "src/image",
+                    "Amenadiel\\JpGraph\\Plot\\": "src/plot",
+                    "Amenadiel\\JpGraph\\Text\\": "src/text",
+                    "Amenadiel\\JpGraph\\Themes\\": "src/themes",
+                    "Amenadiel\\JpGraph\\Util\\": "src/util"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "QPL-1.0"
+            ],
+            "description": "jpGraph, library to make graphs and charts",
+            "homepage": "http://jpgraph.net/",
+            "keywords": [
+                "chart",
+                "data",
+                "graph",
+                "jpgraph",
+                "pie"
+            ],
+            "time": "2018-10-14T21:43:30+00:00"
+        },
+        {
+            "name": "fpdf/fpdf",
+            "version": "1.81.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/coreydoughty/Fpdf.git",
+                "reference": "6be5dd7dd0b3077b565ecadb28e7f01f7d2f2185"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/coreydoughty/Fpdf/zipball/6be5dd7dd0b3077b565ecadb28e7f01f7d2f2185",
+                "reference": "6be5dd7dd0b3077b565ecadb28e7f01f7d2f2185",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Fpdf\\": "src/Fpdf"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Corey Doughty",
+                    "email": "corey@doughty.ca"
+                }
+            ],
+            "description": "FPDF Composer Wrapper",
+            "homepage": "https://github.com/coreydoughty/Fpdf",
+            "keywords": [
+                "fpdf",
+                "pdf",
+                "wrapper"
+            ],
+            "time": "2018-10-25T10:38:10+00:00"
+        },
+        {
+            "name": "symfony/dotenv",
+            "version": "v3.4.33",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/dotenv.git",
+                "reference": "c7e8e471fea74e868ae797970b383dea89ae548a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/dotenv/zipball/c7e8e471fea74e868ae797970b383dea89ae548a",
+                "reference": "c7e8e471fea74e868ae797970b383dea89ae548a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9|>=7.0.8"
+            },
+            "require-dev": {
+                "symfony/process": "^3.4.2|^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Dotenv\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Registers environment variables from a .env file",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "dotenv",
+                "env",
+                "environment"
+            ],
+            "time": "2019-10-18T10:00:34+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "ext-mysqli": "*",
+        "ext-mbstring": "*"
+    },
+    "platform-dev": []
+}

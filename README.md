@@ -1,23 +1,82 @@
-# scrapper-calculator
+# Reporte Idealista
 
-Requisitos del sistema
+#### Requisitos del sistema:
 
-Estoy usando PHP en la version "7.3.8 " y mysqli version "10.4.6-MariaDB"
+- PHP version "7.3.8 " 
+- Mysqli version "10.4.6-MariaDB"
 
-Para importar un archivo CSV:
+#### Uso:
 
-se hace llamado del metodo importCSV(direccion en que se encuentra el archivo CSV);
-De esta manera ya estaria realizada la importacion del archivo CSV en la base de datos
+El sistema es capaz de realizar 3 funciones, importar un archivo CSV, generar un reporte PDF global basado en un rango de km, y reporte PDF basado en km combinado con filtros
 
+ `composer install`
+ 
+##### Importar CSV
 
-Para hacer una busqueda de una zona mediante coordenadas:
-.
-se hace llamado del metodo calculatorGlobal(Latitud,Longitud,Kilometros del radio a buscar los apartamentos); se pasan los parametos indicados,
-al hacer este llamado con los parametros indicados se ejecuta el metodo, creando un PDF donde se indican los apartamentos en la zona y el promedio de precio de la zona, de ser el caso en que no hayan apartamentos en la zona, se pintara: "No existen apartamentos en las coordenadas indicadas". este metodo retorna un array bidimencional con todos los datos de cada apartamento
+```php
+<?php
 
+include __DIR__ . "/../vendor/autoload.php";
 
-Para hacer una busqueda de una zona mediante coordenadas y filtro:
+use leifermendez\scrapper_calculator\Calculator;
 
-se hace llamado del metodo calculatorGlobalFilters(Latitud,Longitud,Kilometros del radio a buscar los apartamentos,$array); se pasan los parametos indicados,al hacer este llamado con los parametros indicados se ejecuta el metodo, creando un PDF donde se indican los apartamentos en la zona y el promedio de precio de la zona, de ser el caso en que no hayan apartamentos en la zona, se pintara: "No existen apartamentos en esta zona con el filtro añadido". este metodo retorna un array bidimencional con todos los datos de cada apartamento
+$calculator = new Calculator();
+$file = __DIR__ . '/../csv/2019-10-02T071802.756Z_alquiler-viviendas_madrid_villa-de-vallecas_ensanche-de-vallecas-la-gavia.csv';
+$res = $calculator->importCSV($file);
 
-el $array que se pasa como parametro en el metodo lleva lo siguiente, array("atributo a buscar correspondiente a la base de datos" => valor a ser buscado, asi sucesivamente con todos los filtros a ser requeridos a busqueda)
+var_dump($res);
+
+```
+
+##### Reporte Global
+
+```php
+<?php
+
+include __DIR__ . "/../vendor/autoload.php";
+
+use leifermendez\scrapper_calculator\Calculator;
+
+$calculator = new Calculator();
+$calculator->calculator(
+'global', // Tipo de filtro
+'40.4238647', //Latitud
+'-3.700173', //Longitud
+10 //Rango KM
+);
+
+var_dump($calculator);
+```
+
+##### Reporte Filtro
+
+```php
+<?php
+
+include __DIR__ . "/../vendor/autoload.php";
+
+use leifermendez\scrapper_calculator\Calculator;
+
+$calculator = new Calculator();
+$calculator->calculator(
+'filters', // Tipo de filtro
+'40.4238647', //Latitud
+'-3.700173', //Longitud
+10, //Rango KM
+ [
+        'bano' => [ // Nombre del campo en la bd por el cual filtrar
+            'symbol' => '=', // Condición del WHERE "="
+            'value' => 1 //Valor a buscar
+        ]
+    ]
+);
+
+var_dump($calculator);
+```
+
+Próximamente:
+ - Reporte PDF con graficas
+ 
+ 
+ [Leifer M](https://leifermendez.github.io) - 
+ [Arturo L](https://github.com/arturoluona)
