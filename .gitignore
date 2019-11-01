@@ -1,1 +1,3 @@
 /vendor/
+/output/*
+/src/LOG.txt

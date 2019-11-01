@@ -6,17 +6,28 @@ use Exception;
 
 class Tools extends Settings
 {
-    public function SQLRange($lat, $lng, $measure)
+    public function SQLRange($lat, $lng, $measure, $conditions = array())
     {
         try {
+            $where = [];
+            $count = 0;
+            foreach ($conditions as $key => $value) {
+                if (!$count) {
+                    $where[] = " WHERE ${key}{$value['symbol']}{$value['value']} ";
+                } else {
+                    $where[] = " AND ${key}{$value['symbol']}{$value['value']} ";
+                }
+                $count++;
+            }
+            $where_sql = implode(' ', $where);
             $table = parent::$DB_TABLE;
             $sql = "SELECT *, 3956 * 2 * ASIN(SQRT(
                 POWER(SIN((" . $lat . " - abs(dest.latitud)) * pi()/180 / 2),
                 2) + COS(" . $lat . " * pi()/180 ) * COS(abs(dest.latitud) *
                 pi()/180) * POWER(SIN((" . $lng . " - dest.longitud) *
                 pi()/180 / 2), 2) )) as distance
-                FROM {$table} dest
-                having distance < " . $measure . " ORDER BY distance ASC;";
+                FROM {$table} dest {$where_sql} 
+                having distance < " . $measure . " ORDER BY distance ASC";
 
             return $sql;
 

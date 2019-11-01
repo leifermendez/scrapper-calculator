@@ -10,8 +10,7 @@
   "require": {
     "ext-mysqli": "*",
     "fpdf/fpdf": "^1.81",
-    "amenadiel/jpgraph": "^3.6",
-    "ext-mbstring": "*"
+    "amenadiel/jpgraph": "^3.6"
   },
   "autoload": {
     "psr-4": {
