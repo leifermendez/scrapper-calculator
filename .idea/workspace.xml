@@ -2,22 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4d67f03b-9570-4c6b-ad59-bba3d4a5db1b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/example/calculator_filters.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/calculator_global.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/templates/ReportFilters.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/templates/ReportGlobal.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/LOG-ERROR.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/calculator.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/importar_csv.php" beforeDir="false" afterPath="$PROJECT_DIR$/example/importar_csv.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/precios.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Calculator.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Calculator.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Errores.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Errores.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Settings.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Settings.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tools.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tools.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -65,14 +53,14 @@
     <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/example" />
-      <recent name="$PROJECT_DIR$/csv" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/sql" />
       <recent name="$PROJECT_DIR$/Clases" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/example" />
+      <recent name="$PROJECT_DIR$/csv" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -106,6 +94,7 @@
       <workItem from="1572608861833" duration="11218000" />
       <workItem from="1572632882867" duration="450000" />
       <workItem from="1572633654798" duration="5081000" />
+      <workItem from="1572687897188" duration="103000" />
     </task>
     <servers />
   </component>

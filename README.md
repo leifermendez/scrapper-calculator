@@ -1,10 +1,16 @@
 # Reporte Idealista
 
+> __Progreso del proyecto:__ Puedes ver el progreso del proyecto, sus próximas carácteristicas y en lo que se está trabajando actualmente. [Aquí](https://github.com/leifermendez/scrapper-calculator/projects/1)
+
 #### Requisitos del sistema:
 
-- PHP version "7.3.8 " 
-- Mysqli version "10.4.6-MariaDB"
-
+``` json
+    "php": "^7.1.3",
+    "ext-mysqli": "*",
+    "fpdf/fpdf": "^1.81",
+    "amenadiel/jpgraph": "^3.6"
+```
+ > Ver más en [composer.json](https://github.com/leifermendez/scrapper-calculator/blob/master/composer.json)
 #### Uso:
 
 El sistema es capaz de realizar 3 funciones, importar un archivo CSV, generar un reporte PDF global basado en un rango de km, y reporte PDF basado en km combinado con filtros
