@@ -1,3 +1,4 @@
 /vendor/
 /output/*
+!output/.gitkeep
 /src/LOG.txt

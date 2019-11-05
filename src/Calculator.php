@@ -136,23 +136,31 @@ class Calculator extends Settings
                     echo self::$ERROR->ERROR_NOT_MIN_MAX;
                 } else {
 
+                    foreach($filters as $key => $value){
+                        if($key === 'precio' ){
+if(gettype($value['value']) === 'array'){
+
+
+    
+}else{
+
+}
+                        }
+                        
+
+                    }
+                    
                     $filters['precio']= [
-                        'symbol' => '>',
-                        'value' => $min_price
+                        ['symbol' => '<',
+                        'value' => $max_price],
+                        
+                            'symbol' => '>',
+                            'value' => $min_price
+                        
                     ];
+                    
                   
-
-                    //var_dump(json_encode($filters));
-
-                    //exit();
                     $sql = $this->TOOLS->SQLRange($lat, $lng, $measure, $filters);
-                   /* $sql = "SELECT *, 3956 * 2 * ASIN(SQRT(
-                    POWER(SIN((" . $lat . " - abs(dest.latitud)) * pi()/180 / 2),
-                    2) + COS(" . $lat . " * pi()/180 ) * COS(abs(dest.latitud) *
-                    pi()/180) * POWER(SIN((" . $lng . " - dest.longitud) *
-                    pi()/180 / 2), 2) )) as distance
-                    FROM apartaments dest
-                    having distance < " . $measure . " AND precio >" . $min_price . " AND precio <" . $max_price . " ORDER BY distance ASC;";*/
                   
                     $ok = $this->connection->query($sql);
                     // echo $this->$conexion->error."<br><br>";
@@ -164,17 +172,7 @@ class Calculator extends Settings
                             $price += $datum['precio'];
                             $list_data[] = $datum;
                     }
-                    /*
-                    if ($row <= 0) {
-                        echo "No existen apartamentos en las coordenadas indicadas Con el precio especificado";
-                        die();
-                    } else {
-                        $precio = 0;
-                        $prom = 0.0;
-                        while (($dato = $ok->fetch_assoc()) > 0) {
-                            $precio += $dato['precio'];
-                        }
-                    */
+                    
                         //ARCHIVO PDF
                         include_once(__DIR__ . '/templates/ReportPrecio.php');
                         echo self::$ERROR->MSG_SUCCESS . ": \n" . $file_name;
