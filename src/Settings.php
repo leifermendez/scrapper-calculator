@@ -16,7 +16,7 @@ class Settings
     public static $DB_HOST = '127.0.0.1';
     public static $DB_NAME = 'idealista_csv';
     public static $DB_USER = 'root';
-    public static $DB_PASSWORD = 'Token.01';
+    public static $DB_PASSWORD = '';
     public static $DB_PORT = '3306';
     public static $DB_TABLE = 'apartaments';
 
@@ -25,6 +25,7 @@ class Settings
 
     public static $REPORT_GLOBAL_FILENAME = 'reporte_global_';
     public static $REPORT_FILTERS_FILENAME = 'reporte_filters_';
+    public static $REPORT_PRECIO_FILENAME = 'reporte_precio_';
 
 
     /**
