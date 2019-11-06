@@ -13,9 +13,17 @@ class Tools extends Settings
             $count = 0;
             foreach ($conditions as $key => $value) {
                 if (!$count) {
-                    $where[] = " WHERE ${key}{$value['symbol']}{$value['value']} ";
+                    if (gettype($value['value'])==='integer'){
+                        $where[] = " WHERE ${key}{$value['symbol']}{$value['value']} ";
+                    } else{
+                        $where[] = " WHERE ${key} BETWEEN {$value['value'][0]} AND {$value['value'][1]}";
+                    }
                 } else {
-                    $where[] = " AND ${key}{$value['symbol']}{$value['value']} ";
+                    if (gettype($value['value'])==='integer'){
+                        $where[] = " AND ${key}{$value['symbol']}{$value['value']} ";
+                    } else{
+                        $where[] = " AND ${key} BETWEEN {$value['value'][0]} AND {$value['value'][1]}";
+                    }
                 }
                 $count++;
             }

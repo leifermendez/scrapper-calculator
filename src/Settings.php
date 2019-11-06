@@ -23,6 +23,7 @@ class Settings
     public static $KM_DEFAULT = 1;
     public static $KM_DEFAULT_INIT = 0.62137;
 
+    public static $REPORT_FILENAME = 'reporte_';
     public static $REPORT_GLOBAL_FILENAME = 'reporte_global_';
     public static $REPORT_FILTERS_FILENAME = 'reporte_filters_';
     public static $REPORT_PRECIO_FILENAME = 'reporte_precio_';
