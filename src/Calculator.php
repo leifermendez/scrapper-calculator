@@ -77,114 +77,33 @@ class Calculator extends Settings
         }
     }
 
-    public function Calculator($option, $lat, $lng, $km = 1, $filters = [], $max_price = null, $min_price = null)
+    public function Calculator($lat, $lng, $km = 1, $filters = [])
     {
         $measure = floatval($km * parent::$KM_DEFAULT_INIT);
         $file_name = __DIR__ . '/../output';
         $price = 0;
         $average = 0.0;
         $list_data = array();
-        switch ($option) {
-            case 'global':
-                $file_name .= "/" . parent::$REPORT_GLOBAL_FILENAME . time() . ".pdf";
-                $sql = $this->TOOLS->SQLRange($lat, $lng, $measure);
-                $ok = $this->connection->query($sql);
-                $row = $this->connection->affected_rows;
-                if (!$row) {
-                    echo self::$ERROR->ERROR_NOT_FOUND;
-                } else {
-                    while (($datum = $ok->fetch_assoc())) {
-                        $price += $datum['precio'];
-                        $list_data[] = $datum;
-                    }
-                    include_once(__DIR__ . '/templates/ReportGlobal.php');
-                    echo self::$ERROR->MSG_SUCCESS . ": \n" . $file_name;
-                    return $file_name;
-                }
-                break;
-            case 'filters':
-                $file_name .= "/" . parent::$REPORT_FILTERS_FILENAME . time() . ".pdf";
-                if (!count($filters)) {
-                    echo self::$ERROR->ERROR_NOT_FILTERS;
-                } else {
-
-                    $sql = $this->TOOLS->SQLRange($lat, $lng, $measure, $filters);
-                    $ok = $this->connection->query($sql);
-                    $rows = $this->connection->affected_rows;
-                    if (!$rows) {
-                        echo self::$ERROR->ERROR_NOT_FOUND;
-                    } else {
-                        while (($datum = $ok->fetch_assoc())) {
-                            $price += $datum['precio'];
-                            $list_data[] = $datum;
-                        }
-
-                        include_once(__DIR__ . '/templates/ReportFilters.php');
-                        echo self::$ERROR->MSG_SUCCESS . ": \n" . $file_name;
-                        return $file_name;
-                    }
-                }
-                break;
-
-            case 'precio':
-
-                /**
-                 * ESTA FACTORIZALA BASADA EN LAS DOS DE ARRIBA
-                 */
-                $file_name .= "/" . parent::$REPORT_PRECIO_FILENAME . time() . ".pdf";
-                if (!$min_price && !$max_price) {
-                    echo self::$ERROR->ERROR_NOT_MIN_MAX;
-                } else {
-
-                    foreach($filters as $key => $value){
-                        if($key === 'precio' ){
-if(gettype($value['value']) === 'array'){
-
-
-    
-}else{
-
-}
-                        }
-                        
-
-                    }
-                    
-                    $filters['precio']= [
-                        ['symbol' => '<',
-                        'value' => $max_price],
-                        
-                            'symbol' => '>',
-                            'value' => $min_price
-                        
-                    ];
-                    
-                  
-                    $sql = $this->TOOLS->SQLRange($lat, $lng, $measure, $filters);
-                  
-                    $ok = $this->connection->query($sql);
-                    // echo $this->$conexion->error."<br><br>";
-                    $rows = $this->connection->affected_rows;
-                    if (!$rows){
-                        echo self::$ERROR->ERROR_NOT_EXIST;
-                    } else {
-                        while (($datum = $ok->fetch_assoc())) {
-                            $price += $datum['precio'];
-                            $list_data[] = $datum;
-                    }
-                    
-                        //ARCHIVO PDF
-                        include_once(__DIR__ . '/templates/ReportPrecio.php');
-                        echo self::$ERROR->MSG_SUCCESS . ": \n" . $file_name;
-                        return $file_name;
-                        
-                    }
-                }
-                break;
-
-            default:
-                echo utf8_decode("Opción invalida!!");
-                break;
+        
+        $file_name .= "/" . parent::$REPORT_FILENAME . time() . ".pdf";
+        if (!count($filters)) {                    
+            $sql = $this->TOOLS->SQLRange($lat, $lng, $measure);
+        } else {
+            $sql = $this->TOOLS->SQLRange($lat, $lng, $measure, $filters);
         }
+        $ok = $this->connection->query($sql);
+        $rows = $this->connection->affected_rows;
+        if (!$rows) {
+            echo self::$ERROR->ERROR_NOT_FOUND;
+        } else {
+            while (($datum = $ok->fetch_assoc())) {
+                $price += $datum['precio'];
+                $list_data[] = $datum;
+            }
+            include_once(__DIR__ . '/templates/ReportFilters.php');
+            echo self::$ERROR->MSG_SUCCESS . ": \n" . $file_name;
+            return $file_name;
+        }
+        
     }
 }

@@ -19,16 +19,29 @@ else
     $prom = $price / $rows;
 
 //crea un string para mostrar en el pdf cuales fueron los filtros asignados
+
 $pdfarray = '';
 foreach ($filters as $key => $value) {
-    $pdfarray .= $key . " = " . $value . " | ";
+    if (gettype($value['value']) === 'integer'){ 
+        $pdfarray .= $key . " ".$value['symbol']. " " .  $value['value'] . " | ";
+    } else{ // si el 'value' es array, ponga '-' dentro dos número de los precios
+        $pdfarray .= $key . " ".$value['symbol']. " " .  $value['value'][0] . "-".$value['value'][1]." | ";
+    }
 }
+$pdfarray = rtrim($pdfarray," | ");
 
 define('EURO', chr(128));
 
-$pdf->Cell(270, 8, 'PROMEDIO DE PRECIO DE LA ZONA FILTRADO', "B", 1, 'C');
-$pdf->Cell(270, 8, '( ' . $pdfarray . ' )', 0, 1, 'C');
-$pdf->Cell(270, 8, '', 0, 1, 'C');
+if (!count($filters)){
+    $pdf->Cell(270, 8, 'PROMEDIO DE PRECIO DE LA ZONA', 0, 1, 'C');
+    $pdf->Cell(270, 8, '', 0, 1, 'C');
+}else{
+    $pdf->Cell(270, 8, 'PROMEDIO DE PRECIO DE LA ZONA FILTRADO', "B", 1, 'C');
+    $pdf->Cell(270, 8, '( ' . $pdfarray . ' )', 0, 1, 'C');
+    $pdf->Cell(270, 8, '', 0, 1, 'C');
+}
+
+
 
 $pdf->Cell(135, 8, "Precio de la zona", "B", 0, 'C');
 $pdf->Cell(135, 8, "Apartamentos en la zona", "B", 1, 'C');
