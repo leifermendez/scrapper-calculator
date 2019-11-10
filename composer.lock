@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "096e42c9cf35f20dcbc5693ee7491e26",
+    "content-hash": "cf6a0d09110ca1f0a7c56dec551aa79f",
     "packages": [
         {
             "name": "amenadiel/jpgraph",
@@ -105,23 +105,23 @@
         },
         {
             "name": "symfony/dotenv",
-            "version": "v3.4.32",
+            "version": "v3.4.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dotenv.git",
-                "reference": "a61b9b493b0c92a789642201f96e1a5264f57a8d"
+                "reference": "c7e8e471fea74e868ae797970b383dea89ae548a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dotenv/zipball/a61b9b493b0c92a789642201f96e1a5264f57a8d",
-                "reference": "a61b9b493b0c92a789642201f96e1a5264f57a8d",
+                "url": "https://api.github.com/repos/symfony/dotenv/zipball/c7e8e471fea74e868ae797970b383dea89ae548a",
+                "reference": "c7e8e471fea74e868ae797970b383dea89ae548a",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.5.9|>=7.0.8"
             },
             "require-dev": {
-                "symfony/process": "~3.2|~4.0"
+                "symfony/process": "^3.4.2|^4.0"
             },
             "type": "library",
             "extra": {
@@ -158,7 +158,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2019-08-14T11:59:53+00:00"
+            "time": "2019-10-18T10:00:34+00:00"
         }
     ],
     "packages-dev": [],
@@ -168,7 +168,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-mysqli": "*"
+        "ext-mysqli": "*",
+        "ext-mbstring": "*"
     },
     "platform-dev": []
 }
