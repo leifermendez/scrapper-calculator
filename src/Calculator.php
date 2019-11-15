@@ -107,18 +107,17 @@ class Calculator extends Settings
         
     }
 
-    public function CalculatorChart($lat, $lng, $km = 1, $filters = [])
+   public function CalculatorChart($lat, $lng, $km = 1, $filters = [])
     {
         $measure = floatval($km * parent::$KM_DEFAULT_INIT);
         $file_name = __DIR__ . '/../output';
         $price = 0;
-        $second_hand =0;
-        $cocina =0;
+        $amueblado =0;
         $a_c =0;
         $elevator =0;
         $balcon =0;
-        $exterior =0;
         $list_data = array();
+        $edad = array();
         
         $file_name .= "/" . parent::$REPORT_CHART_FILENAME . time() . ".pdf";
         if (!count($filters)) {                    
@@ -129,7 +128,7 @@ class Calculator extends Settings
         //consulta datos primer apartamento
         $ok = $this->connection->query($sql);
         $apart = $ok->fetch_assoc();
-        
+        $apart = str_replace("_", " ", $apart);
         //consulta de todos los apartamentos
         $ok = $this->connection->query($sql);
         $rows = $this->connection->affected_rows;
@@ -138,18 +137,16 @@ class Calculator extends Settings
         } else {
             while (($datum = $ok->fetch_assoc())) {
                 $price += $datum['precio'];
-                $second_hand += ($datum['segundaMano']) ? 1 : 0;
-                $cocina += ($datum['cocinaEquipada']) ? 1 : 0;
+                $amueblado += ($datum['amueblado']) ? 1 : 0;
                 $a_c += ($datum['aireAcondicionado']) ? 1 : 0;
                 $elevator += ($datum['ascensor']) ? 1 : 0;
                 $balcon += ($datum['balcon']) ? 1 : 0;
-                $exterior += ($datum['exterior']) ? 1 : 0;
+                $edad [] = $datum['construidoEn']; 
                 $list_data[] = $datum;
             }
             include_once(__DIR__ . '/templates/ReportPdfChart.php');
             echo self::$ERROR->MSG_SUCCESS . ": \n" . $file_name;
             return $file_name;
-        }
-        
+        }        
     }
 }
