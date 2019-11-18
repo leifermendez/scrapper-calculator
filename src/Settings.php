@@ -28,6 +28,7 @@ class Settings
     public static $REPORT_GLOBAL_FILENAME = 'reporte_global_';
     public static $REPORT_FILTERS_FILENAME = 'reporte_filters_';
     public static $REPORT_PRECIO_FILENAME = 'reporte_precio_';
+                    
 
 
     /**

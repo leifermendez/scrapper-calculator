@@ -229,4 +229,46 @@
 	$pdf -> Line(200,270,200,320);
 
 	footer($pdf);
+
+	//GRAFICAS
+	if (!count($filters)){
+	    include_once (__DIR__.'/Chart.php');
+	    
+	    $imgHab = habitacion($lat, $lng, $measure, $this->TOOLS, $this->connection);
+	    $imgBano = bano($lat, $lng, $measure, $this->TOOLS, $this->connection);
+	    $imgPrice = price($lat, $lng, $measure, $this->TOOLS, $this->connection);
+
+	    $pdf->AddPage();
+		headerPdf($pdf);
+		$pdf -> SetFont('Arial', '', 15);
+		$pdf->SetTextColor('50','50','50');
+
+		
+	    $pdf->Text(40,40,'Habitaciones');
+	    $pdf -> Image($imgHab, 8, 45, 95, 95);
+
+		
+	    $pdf->Text(148,40,utf8_decode('Baños'));
+	    $pdf -> Image($imgBano, 110, 45, 95, 95);
+
+		
+	    $pdf -> Image($imgPrice, 18, 168, 180, 160);
+	    $pdf->Text(54,185,utf8_decode('Cantidad de apartamentos según su precio'));
+
+	    $pdf -> Line(10,165,200,165);
+	    $pdf -> Line(106,35,106,150);
+
+	    $pdf->SetTextColor('110','110','110');
+	    $pdf->SetFontSize(12);
+
+	    $pdf->Text(160,318,'Precio ( '.EURO." )");
+	    $pdf->Text(8,220,'Apartamentos');
+	    $pdf->Text(17,148,utf8_decode('Porcentaje según cantidad de habitaciones'));
+	    $pdf->Text(126,148,utf8_decode('Porcentaje según cantidad de baños'));
+	    footer($pdf);
+
+	}else{
+	    //en caso de haber añadido algun filtro
+	}
+
 	$pdf ->Output();//'F',$file_name
