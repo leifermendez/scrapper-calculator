@@ -11,9 +11,9 @@ $calculator->calculator(
     '-3.700173',
     1,
     [
-       'bano' => [
+       'ciudad' => [
             'symbol' => '>',
-            'value' => 1
+            'value' => 'madrid'
         ],
         'precio' => [
             'symbol' => '=',

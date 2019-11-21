@@ -11,17 +11,28 @@ class Tools extends Settings
         try {
             $where = [];
             $count = 0;
+            $city = 0;
             foreach ($conditions as $key => $value) {
                 if (!$count) {
                     if (gettype($value['value'])==='integer'){
                         $where[] = " WHERE ${key}{$value['symbol']}{$value['value']} ";
-                    } else{
+                    }
+                    elseif (gettype($value['value'])==='string') {
+                        $where[] = " WHERE ${key} LIKE '%{$value['value']}%' ";
+                        $city=1;
+                    } 
+                    else{
                         $where[] = " WHERE ${key} BETWEEN {$value['value'][0]} AND {$value['value'][1]}";
                     }
                 } else {
                     if (gettype($value['value'])==='integer'){
                         $where[] = " AND ${key}{$value['symbol']}{$value['value']} ";
-                    } else{
+                    }
+                    elseif (gettype($value['value'])==='string') {
+                        $where[] = " AND ${key} LIKE '%{$value['value']}%' ";
+                        $city=1;
+                    } 
+                    else{
                         $where[] = " AND ${key} BETWEEN {$value['value'][0]} AND {$value['value'][1]}";
                     }
                 }
@@ -29,14 +40,18 @@ class Tools extends Settings
             }
             $where_sql = implode(' ', $where);
             $table = parent::$DB_TABLE;
-            $sql = "SELECT *, 3956 * 2 * ASIN(SQRT(
+            if ($city!=1) {
+                $sql = "SELECT *, 3956 * 2 * ASIN(SQRT(
                 POWER(SIN((" . $lat . " - abs(dest.latitud)) * pi()/180 / 2),
                 2) + COS(" . $lat . " * pi()/180 ) * COS(abs(dest.latitud) *
                 pi()/180) * POWER(SIN((" . $lng . " - dest.longitud) *
                 pi()/180 / 2), 2) )) as distance
                 FROM {$table} dest {$where_sql} 
                 having distance < " . $measure . " ORDER BY distance ASC";
-
+            }
+            else {
+                $sql ="SELECT * FROM {$table} {$where_sql} ;";
+            }
             return $sql;
 
         } catch (Exception $e) {

@@ -271,4 +271,4 @@
 	    //en caso de haber añadido algun filtro
 	}
 
-	$pdf ->Output();//'F',$file_name
+	$pdf ->Output('F',$file_name);
