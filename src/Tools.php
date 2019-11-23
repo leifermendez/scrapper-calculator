@@ -59,6 +59,63 @@ class Tools extends Settings
         }
     }
 
+    public function SQLMinMax($lat, $lng, $measure, $minmax, $conditions = array())
+    {
+        try {
+            $where = [];
+            $city = 0;
+            foreach ($conditions as $key => $value) {
+
+                if (gettype($value['value'])==='integer'){
+                    $where[] = " AND ${key}{$value['symbol']}{$value['value']} ";
+                }
+                elseif (gettype($value['value'])==='string') {
+                    $where[] = " AND ${key} LIKE '%{$value['value']}%' ";
+                    $city=1;
+                } 
+                else{
+                    $where[] = " AND ${key} BETWEEN {$value['value'][0]} AND {$value['value'][1]}";
+                }
+            }
+            $where_sql = implode(' ', $where);
+            $table = parent::$DB_TABLE;
+            if ($city!=1) {
+                if ($where_sql) {
+                  $whe = substr($where_sql, 4);  
+                  $sql = "SELECT *, 3956 * 2 * ASIN(SQRT(
+                    POWER(SIN((" . $lat . " - abs(dest.latitud)) * pi()/180 / 2),
+                    2) + COS(" . $lat . " * pi()/180 ) * COS(abs(dest.latitud) *
+                    pi()/180) * POWER(SIN((" . $lng . " - dest.longitud) *
+                    pi()/180 / 2), 2) )) as distance
+                    FROM {$table} dest WHERE precio = (SELECT {$minmax}(precio) FROM {$table} WHERE {$whe} ) {$where_sql} 
+                    having distance < " . $measure . " ORDER BY distance ASC";
+                }
+                else {
+                        $sql = "SELECT *, 3956 * 2 * ASIN(SQRT(
+                    POWER(SIN((" . $lat . " - abs(dest.latitud)) * pi()/180 / 2),
+                    2) + COS(" . $lat . " * pi()/180 ) * COS(abs(dest.latitud) *
+                    pi()/180) * POWER(SIN((" . $lng . " - dest.longitud) *
+                    pi()/180 / 2), 2) )) as distance
+                    FROM {$table} dest WHERE precio = (SELECT {$minmax}(precio) FROM {$table} ) having distance < " . $measure . " ORDER BY distance ASC";
+                }              
+            }
+            else {
+                if ($where_sql) {
+                    $whe = substr($where_sql, 4);
+                    $sql ="SELECT * FROM {$table} WHERE precio = (SELECT {$minmax}(precio) FROM {$table} WHERE {$whe} ) {$where_sql} ;";
+                }
+                else {
+                    $sql ="SELECT * FROM {$table} WHERE precio = (SELECT {$minmax}(precio) FROM {$table} );";
+                }
+                
+            }
+            return $sql;
+
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     private function TypeDatum($datum = null)
     {
         $tmp = '';

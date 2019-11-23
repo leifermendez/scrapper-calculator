@@ -122,13 +122,30 @@ class Calculator extends Settings
         $file_name .= "/" . parent::$REPORT_CHART_FILENAME . time() . ".pdf";
         if (!count($filters)) {                    
             $sql = $this->TOOLS->SQLRange($lat, $lng, $measure);
+            $sqlmax = $this->TOOLS->SQLMinMAx($lat, $lng, $measure, 'MAX');
+            $sqlmin = $this->TOOLS->SQLMinMAx($lat, $lng, $measure, 'MIN');
         } else {
             $sql = $this->TOOLS->SQLRange($lat, $lng, $measure, $filters);
+            $sqlmax = $this->TOOLS->SQLMinMAx($lat, $lng, $measure, 'MAX', $filters);
+            $sqlmin = $this->TOOLS->SQLMinMAx($lat, $lng, $measure, 'MIN', $filters);
         }
+
         //consulta datos primer apartamento
         $ok = $this->connection->query($sql);
         $apart = $ok->fetch_assoc();
         $apart = str_replace("_", " ", $apart);
+
+        //consulta apartamento costoso
+        $ok = $this->connection->query($sqlmax);
+        $apartmax = $ok->fetch_assoc();
+        $apartmax = str_replace("_", " ", $apartmax);
+
+        //consulta apartamento economico 
+        $ok = $this->connection->query($sqlmin);
+        $apartmin = $ok->fetch_assoc();
+        $apartmin = str_replace("_", " ", $apartmin);
+
+
         //consulta de todos los apartamentos
         $ok = $this->connection->query($sql);
         $rows = $this->connection->affected_rows;
@@ -144,7 +161,7 @@ class Calculator extends Settings
                 $edad [] = $datum['construidoEn']; 
                 $list_data[] = $datum;
             }
-            include_once(__DIR__ . '/templates/ReportPdfChart.php');
+           include_once(__DIR__ . '/templates/ReportPdfChart.php');
             echo self::$ERROR->MSG_SUCCESS . ": \n" . $file_name;
             return $file_name;
         }        

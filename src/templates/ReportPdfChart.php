@@ -8,12 +8,7 @@
 	$balcon = (isset($balcon)) ? $balcon : 0;
 	$list_data = (isset($list_data)) ? $list_data : [];
 	$filters = (isset($filters)) ? $filters : [];
-	$beneficios = array(
-			'aireAcondicionado' => 'A/C',
-			'ascensor' => 'Ascensor',
-			'exterior' => 'Exterior',
-			'balcon' => 'Balcón'
-		);
+	
 
 	//calcula el promedio del precio de la zona
 	if ($rows <= 0)
@@ -49,6 +44,105 @@
 		$pdf->Text(78,346,utf8_decode('Almagro 22,5º | 28010 Madrid'));		
 		$pdf->Text(150,343,'uda@urbanDataAnalytics.com');
 		$pdf->Text(150,348,'+34 91 532 28 45');		
+	}
+
+	function apartamento ($pdf, $apart, $des)
+	{
+		$beneficios = array(
+			'aireAcondicionado' => 'A/C',
+			'ascensor' => 'Ascensor',
+			'exterior' => 'Exterior',
+			'balcon' => 'Balcón'
+		);
+		$pdf->SetTextColor('55','55','55');
+
+		// foto / descripcion
+		$pdf -> Image(__DIR__ .'/../image/prueba.jpg', 10, 40, 60, 60);
+
+		$pdf -> SetFont('Arial', '', 14);
+		$pdf -> SetY(40);
+		$pdf -> Cell(65);
+		$pdf->MultiCell(0,10,utf8_decode($apart['calle']), 0, 'J',false);
+		$pdf->SetFontSize(12);
+		$y=$pdf->GetY();
+		$pdf->SetFontSize(12);
+		$pdf->Text(75,$y+10,utf8_decode($apart['barrio']));
+		$pdf->Text(75,$y+20,utf8_decode($apart['distrito']));
+		$pdf->Text(76,$y+30,utf8_decode($apart['ciudad']));
+
+		
+		$pdf->Text(13,116.5,'Precio.');
+		$pdf -> Image(__DIR__ .'/../image/price2.png', 38, 109, 35, 12);
+		$pdf->Text(43,116.5,$apart['precio']." ". EURO);
+
+		// Detalles
+		$pdf -> Line(10,130,10,154);
+		$pdf -> Line(40,130,40,154);
+		$pdf -> Line(70,130,70,154);
+		$pdf -> Line(110,130,110,154);
+		$pdf -> Line(140,130,140,154);
+
+		$pdf->Text(13,134,'Tipologia');
+		$pdf->Text(43,134,'Planta');
+		$pdf->Text(73,134,'Habitaciones.');
+		$pdf->Text(113,134,utf8_decode('Baños.'));
+		$pdf->Text(143,134,'Superficie Construida');
+
+		$pdf -> SetFont('Arial', 'B', 16);
+		$pdf->Text(18,146,$apart['tipo']);
+		$pdf->Text(52,146,$apart['planta']);
+		$pdf->Text(88,146,$apart['habitaciones']);
+		$pdf->Text(124,146,$apart['bano']);
+		$pdf->Text(153,146,$apart['metrosCuadrados'].utf8_decode(' m²'));
+		$pdf -> SetFont('Arial', '', 12);
+
+		$pdf -> Line(8,165,200,165);
+		$pdf -> SetFont('Arial', '', 12);
+
+		//Beneficios apartamentos
+		$coun = 0;
+		$ejeX = 9;
+		foreach ($beneficios as $key => $value) {
+			if ($apart[$key]) {
+				$pdf -> Rect($ejeX, 172, 40, 10, 'F');
+				$pdf->Text($ejeX+13,178.4,utf8_decode($value));
+				$ejeX+=45;
+				$coun++;
+			}
+		}
+		if($coun == 0)
+		{
+			$pdf -> Rect(23, 172, 160, 10, 'F');
+			$pdf->Text(42,178.4,utf8_decode('Apartamento no posee: A/C .. Exterior .. Ascensor .. Balcón'));
+		}
+
+		$pdf -> Line(8,190,200,190);
+
+
+		$pdf -> SetFont('Arial', 'B', 14);
+		switch ($des) {
+			case '7'://primer apartamento
+					$pdf->Text(60,34,utf8_decode("Apartamento más cercano a la ubicación"));
+				break;
+			case '8': // economicio
+					$desc = substr($apart['descripcion'], 0, 1200);
+					$pdf->Text(74,34,utf8_decode("Apartamento más económico"));
+					$pdf->SetFontSize(16);
+					$pdf->Text(11,200,utf8_decode("Descripción: "));
+					$pdf -> SetFont('Arial', '', 11);
+					$pdf -> SetY(205);
+					$pdf->MultiCell(0,10,utf8_decode($desc)."...", 0, 'J',false);
+				break;
+			case '9': //costoso
+					$desc = substr($apart['descripcion'], 0, 1200);
+					$pdf->Text(74,34,utf8_decode("Apartamento más costoso"));			
+					$pdf->SetFontSize(16);
+					$pdf->Text(11,200,utf8_decode("Descripción: "));
+					$pdf -> SetFont('Arial', '', 11);
+					$pdf -> SetY(205);
+					$pdf->MultiCell(0,10,utf8_decode($desc)."...", 0, 'J',false);
+				break;
+		}
 	}
 
 	//Portada
@@ -87,68 +181,11 @@
 	define('EURO', chr(128));
 	headerPdf($pdf);	
 
-	// foto / descripcion
-	$pdf -> Image(__DIR__ .'/../image/prueba.jpg', 10, 40, 60, 60);
-
-	$pdf->SetFontSize(14);
-	$pdf -> SetY(40);
-	$pdf -> Cell(65);
-	$pdf->MultiCell(0,10,utf8_decode($apart['calle']), 0, 'J',false);
-	$pdf->SetFontSize(12);
-	$y=$pdf->GetY();
-	$pdf->SetFontSize(12);
-	$pdf->Text(75,$y+10,utf8_decode($apart['barrio']));
-	$pdf->Text(75,$y+20,utf8_decode($apart['distrito']));
-	$pdf->Text(76,$y+30,utf8_decode($apart['ciudad']));
-
 	
-	$pdf->Text(13,116.5,'Precio.');
-	$pdf -> Image(__DIR__ .'/../image/price2.png', 38, 109, 35, 12);
-	$pdf->Text(43,116.5,$apart['precio']." ". EURO);
 
-	// Detalles
-	$pdf -> Line(10,130,10,154);
-	$pdf -> Line(40,130,40,154);
-	$pdf -> Line(70,130,70,154);
-	$pdf -> Line(110,130,110,154);
-	$pdf -> Line(140,130,140,154);
-
-	$pdf->Text(13,134,'Tipologia');
-	$pdf->Text(43,134,'Planta');
-	$pdf->Text(73,134,'Habitaciones.');
-	$pdf->Text(113,134,utf8_decode('Baños.'));
-	$pdf->Text(143,134,'Superficie Construida');
-
-	$pdf -> SetFont('Arial', 'B', 16);
-	$pdf->Text(18,146,$apart['tipo']);
-	$pdf->Text(52,146,$apart['planta']);
-	$pdf->Text(88,146,$apart['habitaciones']);
-	$pdf->Text(124,146,$apart['bano']);
-	$pdf->Text(153,146,$apart['metrosCuadrados'].utf8_decode(' m²'));
-	$pdf -> SetFont('Arial', '', 12);
-
-	$pdf -> Line(8,165,200,165);
-	$pdf -> SetFont('Arial', '', 12);
-
-	//Beneficios apartamentos
-	$coun = 0;
-	$ejeX = 9;
-	foreach ($beneficios as $key => $value) {
-		if ($apart[$key]) {
-			$pdf -> Rect($ejeX, 172, 40, 10, 'F');
-			$pdf->Text($ejeX+13,178.4,utf8_decode($value));
-			$ejeX+=45;
-			$coun++;
-		}
-	}
-	if($coun == 0)
-	{
-		$pdf -> Rect(23, 172, 160, 10, 'F');
-		$pdf->Text(42,178.4,utf8_decode('Apartamento no posee: A/C .. Exterior .. Ascensor .. Balcón'));
-	}
+	apartamento($pdf, $apart, 7);
 
 	//Reporte Global-1
-	$pdf -> Line(8,190,200,190);
 	$pdf->SetFontSize(16);
 	$pdf->Text(73,200,'Detalle global de la zona');
 	$pdf->SetFontSize(12);
@@ -271,4 +308,21 @@
 	    //en caso de haber añadido algun filtro
 	}
 
-	$pdf ->Output('F',$file_name);
+	//Pagina apartamento economico
+	$pdf->AddPage();
+
+	headerPdf($pdf);
+
+	apartamento($pdf, $apartmin, 8);
+
+	footer($pdf);
+
+	//pagina aartamento costoso
+	$pdf->AddPage();
+	headerPdf($pdf);
+
+	apartamento($pdf, $apartmax, 9);
+
+	footer($pdf);
+
+	$pdf ->Output();//'F',$file_name

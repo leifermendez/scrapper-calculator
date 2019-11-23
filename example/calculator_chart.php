@@ -9,11 +9,5 @@ $calculator->calculatorChart(
       
     '40.4315534',
     '-3.6777435',
-    1,    
-    [
-       'ciudad' => [
-            'symbol' => '>',
-            'value' => 'madrid'
-        ]
-    ]
+    1
 );
