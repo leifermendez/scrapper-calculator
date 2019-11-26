@@ -49,7 +49,6 @@ class Calculator extends Settings
 
             foreach (parent::$FIELDS as $key => $value) {
                 parent::$FIELDS[$key]['position'] = array_search($key, $data_file['data']);
-
             }
 
             $len = count(parent::$FIELDS) - 1;
