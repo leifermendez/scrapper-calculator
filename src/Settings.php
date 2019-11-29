@@ -153,5 +153,4 @@ class Settings
             return false;
         }
     }
-
 }

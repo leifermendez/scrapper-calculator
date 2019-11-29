@@ -148,9 +148,10 @@ class Tools extends Settings
         try {
             $values = [];
             foreach (parent::$FIELDS as $key => $value) {
-                $tmp = self::Sanity($value['value']);
+
+                $tmp = self::Sanity($value['value']); //Esta funcion hace que los datos no se inserten bien en su totalidad, por ejemplo a las fechas les elimina el / de separacion
                 $tmp = (strlen($tmp) < 1) ? 0 : $tmp;
-                $tmp = ((float)$tmp) ? (float)$tmp : $tmp;
+                //$tmp = ((float)$tmp) ? (float)$tmp : $tmp; -- Esta funcion al convertir string en numeros hace que se eliminen datos extras como el telfono ya que agarra solo los primeros numeros hasta encontrar un caracter no numerico
                 $values[] = self::TypeDatum($tmp);
             }
 
@@ -193,7 +194,7 @@ class Tools extends Settings
                 foreach (parent::$FIELDS as $key => $value) {
 
                     if ($value['position'] == $position) {
-                        parent::$FIELDS[$key]['value'] = ($v === 'FALSE' || (strlen($v) < 1)) ? NULL : $v;
+                        parent::$FIELDS[$key]['value'] = ($v === 'FALSE' || (strlen($v) < 1)) ? 0 : $v;
                         $data = array(
                             'position' => $position,
                             'value' => parent::$FIELDS[$key]['value'],

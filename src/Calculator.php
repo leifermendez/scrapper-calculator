@@ -52,19 +52,29 @@ class Calculator extends Settings
             }
 
             $len = count(parent::$FIELDS) - 1;
+
             $fields_db = implode(',', parent::$FIELDS_DB);
+
             while (($data = fgetcsv($data_file['data_file'], 10000)) == true) {
                 $data = array_map("utf8_encode", $data);
+
                 for ($index = 0; $index < $len; $index++) {
+
                     $this->TOOLS->SetValueField($index, $data[$index]);
+
+                    
+                }
+
                     $res_values = $this->TOOLS->GetAllValues();
+
                     $res_values = implode(',', $res_values);
+
                     $sql = "INSERT INTO {$this->table_name} ($fields_db) values ({$res_values});";
                     $this->connection->query($sql);
                     if ($this->connection->error) {
                         self::$ERROR->Log('ee');
+                        var_dump($this->connection->error);
                     }
-                }
             }
 
             fclose($data_file['data_file']);

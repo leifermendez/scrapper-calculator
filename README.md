@@ -69,9 +69,9 @@ var_dump($calculator);
 ```
 
 
- ##### Reporte Estadístico
+##### Reporte Estadístico
 
- ```php
+```php
 <?php
 
 include __DIR__ . "/../vendor/autoload.php";
