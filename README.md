@@ -13,7 +13,7 @@
  > Ver más en [composer.json](https://github.com/leifermendez/scrapper-calculator/blob/master/composer.json)
 #### Uso:
 
-El sistema es capaz de realizar 3 funciones, importar un archivo CSV, generar un reporte PDF global basado en un rango de km, y reporte PDF basado en km combinado con filtros
+El sistema es capaz de realizar 3 funciones, importar un archivo CSV, generar un reporte PDF básico ya sea global basado en km o combinado con filtros y un reporte PDF con estadístcas global basado en km o combinado con filtros
 
  `composer install`
  
@@ -34,7 +34,8 @@ var_dump($res);
 
 ```
 
-##### Reporte Global
+
+##### Reporte Básico
 
 ```php
 <?php
@@ -44,35 +45,22 @@ include __DIR__ . "/../vendor/autoload.php";
 use leifermendez\scrapper_calculator\Calculator;
 
 $calculator = new Calculator();
-$calculator->calculator(
-'global', // Tipo de filtro
-'40.4238647', //Latitud
-'-3.700173', //Longitud
-10 //Rango KM
-);
-
-var_dump($calculator);
-```
-
-##### Reporte Filtro
-
-```php
-<?php
-
-include __DIR__ . "/../vendor/autoload.php";
-
-use leifermendez\scrapper_calculator\Calculator;
-
-$calculator = new Calculator();
-$calculator->calculator(
-'filters', // Tipo de filtro
-'40.4238647', //Latitud
-'-3.700173', //Longitud
-10, //Rango KM
- [
-        'bano' => [ // Nombre del campo en la bd por el cual filtrar
-            'symbol' => '=', // Condición del WHERE "="
-            'value' => 1 //Valor a buscar
+$calculator->calculator(      
+    '40.4238647', //latitud
+    '-3.700173', //longitud
+    1, // Rango Km -- Hasta aca los argumentos si solo desea busqueda global
+    [   //array para filtros
+       'ciudad' => [ // filtro de busqueda por ciudad 
+            'symbol' => '>',
+            'value' => 'madrid' //ciudad a buscar
+        ],
+        'bano' => [  // Nombre del campo en la bd por el cual filtrar 
+            'symbol' => '=', // Condicion del WHERE
+            'value' => 3 // Valor a ser buscado
+        ],
+        'precio' => [  //filtro por precio 
+            'symbol' => '=', // Condicion del WHERE
+            'value'=>[600,1000]//min - max
         ]
     ]
 );
@@ -80,8 +68,39 @@ $calculator->calculator(
 var_dump($calculator);
 ```
 
-Próximamente:
- - Reporte PDF con graficas
+
+ ##### Reporte Estadístico
+
+ ```php
+<?php
+
+include __DIR__ . "/../vendor/autoload.php";
+
+use leifermendez\scrapper_calculator\Calculator;
+
+$calculator = new Calculator();
+$calculator->calculatorChart(    
+    '40.4238647', //latitud
+    '-3.700173', //longitud
+    1, // Rango Km -- Hasta aca los argumentos si solo desea busqueda global
+    [   //array para filtros
+       'ciudad' => [ // filtro de busqueda por ciudad 
+            'symbol' => '>',
+            'value' => 'madrid' //ciudad a buscar
+        ],
+        'bano' => [ // Nombre del campo en la bd por el cual filtrar  
+            'symbol' => '=', // Condicion del WHERE
+            'value' => 3 // Valor a ser buscado
+        ],
+        'precio' => [  //filtro por precio 
+            'symbol' => '=', // Condicion del WHERE
+            'value'=>[600,1000]//min - max
+        ]
+    ]
+);
+
+var_dump($calculator);
+```
  
  
  [Leifer M](https://leifermendez.github.io) - 
