@@ -66,7 +66,7 @@ class Calculator extends Settings
                 }
 
                     $res_values = $this->TOOLS->GetAllValues();
-
+                    
                     $res_values = implode(',', $res_values);
 
                     $sql = "INSERT INTO {$this->table_name} ($fields_db) values ({$res_values});";

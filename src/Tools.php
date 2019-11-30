@@ -149,7 +149,18 @@ class Tools extends Settings
             $values = [];
             foreach (parent::$FIELDS as $key => $value) {
 
-                $tmp = self::Sanity($value['value']); //Esta funcion hace que los datos no se inserten bien en su totalidad, por ejemplo a las fechas les elimina el / de separacion
+                $tmp = '';
+                // Funcion sanity hace que al campo de fecha se le quiten los / , aca excluimos a la fecha de sanity
+                if($key != 'Fecha')
+                {
+                    $tmp = self::Sanity($value['value']); 
+                }
+                else
+                {
+                    $tmp = $value['value'];
+                }
+
+                
                 $tmp = (strlen($tmp) < 1) ? 0 : $tmp;
                 //$tmp = ((float)$tmp) ? (float)$tmp : $tmp; -- Esta funcion al convertir string en numeros hace que se eliminen datos extras como el telfono ya que agarra solo los primeros numeros hasta encontrar un caracter no numerico
                 $values[] = self::TypeDatum($tmp);
@@ -243,7 +254,7 @@ class Tools extends Settings
         $s = str_replace("ñ", "n", $s);
         $s = str_replace("Ñ", "N", $s);
 
-        $s = preg_replace('/[^a-zA-Z0-9_.-]/', '', $s);
+       $s = preg_replace('/[^a-zA-Z0-9_.-]/', '', $s);
         return $s;
     }
 }
