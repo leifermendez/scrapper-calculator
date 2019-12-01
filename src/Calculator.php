@@ -122,6 +122,10 @@ class Calculator extends Settings
         $file_name = __DIR__ . '/../output';
         $price = 0;
         $pricemetro = 0;
+        $planta = 0;
+        $hab = 0;
+        $bno = 0;
+        $constr = 0;
         $amueblado =0;
         $a_c =0;
         $elevator =0;
@@ -150,6 +154,10 @@ class Calculator extends Settings
             while (($datum = $ok->fetch_assoc())) {
                 $price += $datum['precio'];
                 $pricemetro += $datum['precioMetro'];
+                $planta += $datum['planta'];
+                $hab += $datum['habitaciones'];
+                $bno += $datum['bano'];
+                $constr += $datum['metrosCuadrados'];
                 $amueblado += ($datum['amueblado']) ? 1 : 0;
                 $a_c += ($datum['aireAcondicionado']) ? 1 : 0;
                 $elevator += ($datum['ascensor']) ? 1 : 0;

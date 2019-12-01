@@ -4,6 +4,10 @@
 	$file_name = (isset($file_name)) ? $file_name : NULL;
 	$price = (isset($price)) ? $price : 0;
 	$pricemetro = (isset($pricemetro)) ? $pricemetro : 0;
+	$planta = (isset($planta)) ? $planta : 0;
+	$hab = (isset($hab)) ? $hab : 0;
+	$bno = (isset($bno)) ? $bno : 0;
+	$constr = (isset($constr)) ? $constr : 0;
 	$amueblado = (isset($amueblado)) ? $amueblado : 0;
 	$a_c = (isset($a_c)) ? $a_c : 0;
 	$elevator = (isset($elevator)) ? $elevator : 0;
@@ -17,14 +21,22 @@
 	{
 	    $prom = 0;
 		$promMetro = 0;
+		$planta = 0;
+		$hab = 0;
+		$bno = 0;
+		$constr = 0;
 	}
 	else
 	{
 	    $prom = $price / $rows;
 		$promMetro = $pricemetro / $rows;
+		$plan = $planta / $rows;
+		$hb = $hab / $rows;
+		$bn = $bno / $rows;
+		$co = $constr / $rows;
 	}	
 
-	$pdf = new FPDF('P','mm','Legal');
+	$pdf = new FPDF('P','mm','A4');
 
 	$pdf ->SetFillColor('200','200','200');
 	$pdf->SetDrawColor('194','194','194');
@@ -34,20 +46,22 @@
 
 	function headerPdf($pdf)
 	{
+		$pdf -> SetFont('Arial', '', 12);	
+		$pdf->SetTextColor('55','55','55');
 		$pdf -> Image(__DIR__ .'/../image/AH_LogoHost_Color.png', 6, 6, 60, 14);
 		$pdf->Text(93,15,utf8_decode('Informe de Valoración'));
 		//$pdf -> Image(__DIR__ .'/../image/maps.png', 185, 3, 20, 20, 'PNG');
-		$pdf -> Line(8,25,207,25);
+		$pdf -> Line(8,23,200,23);
 	}
 
 	function footer($pdf)
 	{
 		$pdf->SetTextColor('134','134','134');
-		$pdf -> Line(8,333,207,333);
-		$pdf->SetFontSize(9);
-		$pdf->Text(8,346,'Alterhome');
-		$pdf->Text(60,346,utf8_decode('Calle de Alfonso XII, 8, entreplanta, izquierda, 28014 Madrid'));		
-		$pdf->Text(177,346,'+34 910 57 30 27');		
+		$pdf -> Line(8,280,200,280);
+		$pdf -> SetFont('Arial', '', 9);	
+		$pdf->Text(8,290,'Alterhome');
+		$pdf->Text(60,290,utf8_decode('Calle de Alfonso XII, 8, entreplanta, izquierda, 28014 Madrid'));		
+		$pdf->Text(177,290,'+34 910 57 30 27');		
 	}
 
 	function apartamento ($pdf, $apart, $prom)
@@ -59,7 +73,9 @@
 			'balcon' => 'Balcón'
 		);
 		$pdf->SetTextColor('55','55','55');
+		$pdf -> SetFont('Arial', 'B', 17);
 
+		$pdf->Text(75,33,utf8_decode("Promedio de la zona"));
 		// foto / descripcion
 		$pdf -> Image(__DIR__ .'/../image/prueba.jpg', 10, 40, 60, 60);
 
@@ -99,36 +115,14 @@
 
 		$pdf -> SetFont('Arial', 'B', 16);
 		$pdf->Text(18,146,$apart['tipo']);
-		$pdf->Text(52,146,$apart['planta']);
-		$pdf->Text(88,146,$apart['habitaciones']);
-		$pdf->Text(124,146,$apart['bano']);
-		$pdf->Text(153,146,$apart['metrosCuadrados'].utf8_decode(' m²'));
+		$pdf->Text(52,146,round($prom['planta'],0));
+		$pdf->Text(88,146,round($prom['habitaciones'],0));
+		$pdf->Text(124,146,round($prom['bano'],0));
+		$pdf->Text(153,146,round($prom['construccion'],2).utf8_decode(' m²'));
 		$pdf -> SetFont('Arial', '', 12);
 
-		$pdf -> Line(8,165,207,165);
+		$pdf -> Line(8,160,207,160);
 		$pdf -> SetFont('Arial', '', 12);
-
-		//Beneficios apartamentos
-		$coun = 0;
-		$ejeX = 9;
-		foreach ($beneficios as $key => $value) {
-			if ($apart[$key]) {
-				$pdf -> Rect($ejeX, 172, 40, 10, 'F');
-				$pdf->Text($ejeX+13,178.4,utf8_decode($value));
-				$ejeX+=45;
-				$coun++;
-			}
-		}
-		if($coun == 0)
-		{
-			$pdf -> Rect(23, 172, 160, 10, 'F');
-			$pdf->Text(35,178.4,utf8_decode('Apartamento no posee: Aire Acondicionado, Exterior, Ascensor, Balcón.'));
-		}
-
-		$pdf -> Line(8,190,207,190);
-
-
-		$pdf -> SetFont('Arial', 'B', 14);
 	}
 
 	//Portada
@@ -136,7 +130,7 @@
 	$pdf->SetTextColor('225','225','225');
 	$pdf->SetFontSize(20);
 	$date = getdate();
-	$pdf->image(__DIR__.'/../image/portada.jpg',0,0,250,356,'JPG');
+	$pdf->image(__DIR__.'/../image/portada.jpg',0,0,250,300,'JPG');
 	$pdf->image(__DIR__.'/../image/AH_LogoHost_Blanco.png',50,10,120,29,'PNG');
 	$pdf->Text(70,60,utf8_decode('INFORME DE VALORACIÓN'));
 	$pdf->SetFontSize(12);
@@ -144,8 +138,8 @@
 	 $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
   	 $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
   	$mes = str_replace($meses_EN,$meses_ES,$date['month']);
-	$pdf->Text(150,330,utf8_decode('Fecha de emisión'));
-	$pdf->Text(145,339,$date['mday']." de ".$mes." de ".$date['year']);
+	$pdf->Text(150,280,utf8_decode('Fecha de emisión'));
+	$pdf->Text(145,286,$date['mday']." de ".$mes." de ".$date['year']);
 
 	//contra-portada
 	$pdf -> AddPage();	
@@ -158,7 +152,7 @@
 	$pdf->MultiCell(0,10,utf8_decode($apart['direccion']),0,'J',false);
 	$pdf->Ln(50);
 	$pdf -> Cell(30,15,'Alquiler','L',0,'C',true);
-	$pdf -> Image(__DIR__ .'/../image/AH_LogoHost_Color.png', 50, 270, 120,27);
+	$pdf -> Image(__DIR__ .'/../image/AH_LogoHost_Color.png', 50, 220, 120,27);
 
 	//Pagina datos 
 	$pdf -> AddPage();
@@ -169,42 +163,44 @@
 
 	
 
-	apartamento($pdf, $apart,[ 'prom' => $prom, 'promM' => $promMetro]);
+	apartamento($pdf, $apart,[ 'prom' => $prom, 'promM' => $promMetro, 'planta' => $plan, 'habitaciones' => $hb, 'bano' => $bn, 'construccion' => $co]);
 
 	//Reporte Global-1
 	$pdf->SetFontSize(16);
-	$pdf->Text(73,200,'Detalle global de la zona');
+	$pdf->Text(73,170,'Detalle global de la zona');
 	$pdf->SetFontSize(12);
 
 	//tamaños title
-	$pdf->Text(23,215,'Precio');
-	$pdf->Text(63,215,'Apartamentos');	
-	$pdf->Text(101.5,215,utf8_decode('Edad media edificación'));
-	$pdf->Text(155,215,utf8_decode('Radio de búsqueda'));
-	$pdf->Text(26,275,'A/C');
-	$pdf->Text(67,275,'Ascensor');
-	$pdf->Text(118,275,utf8_decode('Balcón'));	
-	$pdf->Text(164,275,'Amueblado');
+	$pdf->Text(23,180,'Precio');
+	$pdf->Text(63,180,'Apartamentos');	
+	$pdf->Text(101.5,180,utf8_decode('Edad media edificación'));
+	$pdf->Text(155,180,utf8_decode('Radio de búsqueda'));
+	$pdf->Text(26,228,'A/C');
+	$pdf->Text(67,228,'Ascensor');
+	$pdf->Text(118,228,utf8_decode('Balcón'));	
+	$pdf->Text(164,228,'Amueblado');
 
 	$pdf->SetTextColor('100','100','100');
-	$pdf->Text(90,320,'Apartamentos');
+	$pdf->Text(43,267,'Estos valores son la cantidad de apartamentos en base a la zona');
 	$pdf->SetTextColor('55','55','55');
+	$pdf -> SetFont('Arial', 'I', 9);
+	$pdf->Text(58,272,'( Ejemplo: hay '.$elevator.' apartamentos de '.$rows.' que cuentan con ascensor )');
 
 	//data
-	$pdf -> SetFont('Arial', 'B', 13.5);
+	$pdf -> SetFont('Arial', 'B', 12.5);
 	//precio	
-	$pdf -> Line(8,210,8,250);
-	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 15, 218, 30, 35);
-	$pdf->Text(20,238,round($prom,2)." ".EURO);
+	$pdf -> Line(8,175,8,210);
+	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 18, 185, 25, 27);
+	$pdf->Text(20,200,round($prom,2)." ".EURO);
 
 	//apartamentos
-	$pdf -> Line(53,210,53,250);	
-	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 62, 218, 30, 35);
-	$pdf->Text(73,238,$rows);
+	$pdf -> Line(53,175,53,210);	
+	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 64, 185, 25, 27);
+	$pdf->Text(73,200,$rows);
 
 	//edad media
-	$pdf -> Line(100,210,100,250);
-	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 110, 218, 30, 35);
+	$pdf -> Line(100,175,100,210);
+	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 112, 185, 25, 27);
 
 		//calculo edad
 		$sumedad=0;
@@ -216,41 +212,41 @@
 			}			
 		}
 		$edad = $sumedad/$rowsedad;
-	$pdf->Text(122,238,round($edad));
+	$pdf->Text(121,200,round($edad));
 
 	// Radio de busqueda
-	$pdf -> Line(150,210,150,250);
-	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 160, 218, 30, 35);
-	$pdf->Text(172.5,238,$km);
-	$pdf -> Line(200,210,200,250);			
+	$pdf -> Line(150,175,150,210);
+	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 162, 185, 25, 27);
+	$pdf->Text(172.5,200,$km);
+	$pdf -> Line(200,175,200,210);			
 	$pdf -> SetFont('Arial', '', 11);
-	$pdf->Text(138,223,utf8_decode('Años'));
-	$pdf->Text(189,223,utf8_decode('Km³'));	
+	$pdf->Text(138,189,utf8_decode('Años'));
+	$pdf->Text(189,189,utf8_decode('Km³'));	
 	$pdf -> SetFont('Arial', 'B', 13.5);
 
 	//Reporte Global-2
-	$pdf -> Line(8,260,200,260);
+	$pdf -> Line(8,218,200,218);
 
 	// A/C
-	$pdf -> Line(8,270,8,320);
-	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 15, 278, 30, 35);
-	$pdf->Text(26,297,$a_c);
+	$pdf -> Line(8,223,8,270);
+	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 18, 232, 25, 27);
+	$pdf->Text(27,247,$a_c);
 
 	//ascensor
-	$pdf -> Line(53,270,53,310);	
-	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 62, 278, 30, 35);
-	$pdf->Text(73,297,$elevator);
+	$pdf -> Line(53,223,53,258);	
+	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 64, 232, 25, 27);
+	$pdf->Text(73,247,$elevator);
 
 	// balcón
-	$pdf -> Line(100,270,100,310);
-	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 110, 278, 30, 35);
-	$pdf->Text(122.5,297,$balcon);
+	$pdf -> Line(100,223,100,258);
+	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 112, 232, 25, 27);
+	$pdf->Text(121.5,247,$balcon);
 
 	// Amueblado
-	$pdf -> Line(150,270,150,310);
-	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 160, 278, 30, 35);
-	$pdf->Text(171,297,$amueblado);
-	$pdf -> Line(200,270,200,320);
+	$pdf -> Line(150,223,150,258);
+	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 162, 232, 25, 27);
+	$pdf->Text(172,247,$amueblado);
+	$pdf -> Line(200,223,200,270);
 
 	footer($pdf);
 
@@ -269,26 +265,26 @@
 
 		
 	    $pdf->Text(40,40,'Habitaciones');
-	    $pdf -> Image($imgHab, 8, 45, 95, 95);
+	    $pdf -> Image($imgHab, 15, 45, 80, 75);
 
 		
-	    $pdf->Text(148,40,utf8_decode('Baños'));
-	    $pdf -> Image($imgBano, 110, 45, 95, 95);
+	    $pdf->Text(150,40,utf8_decode('Baños'));
+	    $pdf -> Image($imgBano, 120, 45, 80, 75);
 
 		
-	    $pdf -> Image($imgPrice, 18, 168, 180, 160);
-	    $pdf->Text(54,185,utf8_decode('Cantidad de apartamentos según su precio'));
+	    $pdf -> Image($imgPrice, 28, 135, 170, 150);
+	    $pdf->Text(54,150,utf8_decode('Cantidad de apartamentos según su precio'));
 
-	    $pdf -> Line(10,165,207,165);
-	    $pdf -> Line(106,35,106,150);
+	    $pdf -> Line(10,140,207,140);
+	    $pdf -> Line(106,35,106,135);
 
 	    $pdf->SetTextColor('110','110','110');
 	    $pdf->SetFontSize(12);
 
-	    $pdf->Text(160,318,'Precio ( '.EURO." )");
-	    $pdf->Text(8,220,'Apartamentos');
-	    $pdf->Text(17,148,utf8_decode('Porcentaje según cantidad de habitaciones'));
-	    $pdf->Text(126,148,utf8_decode('Porcentaje según cantidad de baños'));
+	    $pdf->Text(160,272,'Precio ( '.EURO." )");
+	    $pdf->Text(3,200,'Apartamentos');
+	    $pdf->Text(17,130,utf8_decode('Porcentaje según cantidad de habitaciones'));
+	    $pdf->Text(126,130,utf8_decode('Porcentaje según cantidad de baños'));
 	    footer($pdf);
 
 	}else{
