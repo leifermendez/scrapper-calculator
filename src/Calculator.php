@@ -121,6 +121,7 @@ class Calculator extends Settings
         $measure = floatval($km * parent::$KM_DEFAULT_INIT);
         $file_name = __DIR__ . '/../output';
         $price = 0;
+        $pricemetro = 0;
         $amueblado =0;
         $a_c =0;
         $elevator =0;
@@ -131,29 +132,14 @@ class Calculator extends Settings
         $file_name .= "/" . parent::$REPORT_CHART_FILENAME . time() . ".pdf";
         if (!count($filters)) {                    
             $sql = $this->TOOLS->SQLRange($lat, $lng, $measure);
-            $sqlmax = $this->TOOLS->SQLMinMAx($lat, $lng, $measure, 'MAX');
-            $sqlmin = $this->TOOLS->SQLMinMAx($lat, $lng, $measure, 'MIN');
         } else {
             $sql = $this->TOOLS->SQLRange($lat, $lng, $measure, $filters);
-            $sqlmax = $this->TOOLS->SQLMinMAx($lat, $lng, $measure, 'MAX', $filters);
-            $sqlmin = $this->TOOLS->SQLMinMAx($lat, $lng, $measure, 'MIN', $filters);
         }
 
         //consulta datos primer apartamento
         $ok = $this->connection->query($sql);
         $apart = $ok->fetch_assoc();
         $apart = str_replace("_", " ", $apart);
-
-        //consulta apartamento costoso
-        $ok = $this->connection->query($sqlmax);
-        $apartmax = $ok->fetch_assoc();
-        $apartmax = str_replace("_", " ", $apartmax);
-
-        //consulta apartamento economico 
-        $ok = $this->connection->query($sqlmin);
-        $apartmin = $ok->fetch_assoc();
-        $apartmin = str_replace("_", " ", $apartmin);
-
 
         //consulta de todos los apartamentos
         $ok = $this->connection->query($sql);
@@ -163,6 +149,7 @@ class Calculator extends Settings
         } else {
             while (($datum = $ok->fetch_assoc())) {
                 $price += $datum['precio'];
+                $pricemetro += $datum['precioMetro'];
                 $amueblado += ($datum['amueblado']) ? 1 : 0;
                 $a_c += ($datum['aireAcondicionado']) ? 1 : 0;
                 $elevator += ($datum['ascensor']) ? 1 : 0;

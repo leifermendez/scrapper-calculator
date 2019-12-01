@@ -1,7 +1,9 @@
 <?php 
+	use Fpdf\Fpdf;
 	
 	$file_name = (isset($file_name)) ? $file_name : NULL;
 	$price = (isset($price)) ? $price : 0;
+	$pricemetro = (isset($pricemetro)) ? $pricemetro : 0;
 	$amueblado = (isset($amueblado)) ? $amueblado : 0;
 	$a_c = (isset($a_c)) ? $a_c : 0;
 	$elevator = (isset($elevator)) ? $elevator : 0;
@@ -12,12 +14,15 @@
 
 	//calcula el promedio del precio de la zona
 	if ($rows <= 0)
+	{
 	    $prom = 0;
+		$promMetro = 0;
+	}
 	else
+	{
 	    $prom = $price / $rows;
-
-	use Fpdf\Fpdf;
-	
+		$promMetro = $pricemetro / $rows;
+	}	
 
 	$pdf = new FPDF('P','mm','Legal');
 
@@ -45,7 +50,7 @@
 		$pdf->Text(177,346,'+34 910 57 30 27');		
 	}
 
-	function apartamento ($pdf, $apart, $des)
+	function apartamento ($pdf, $apart, $prom)
 	{
 		$beneficios = array(
 			'aireAcondicionado' => 'A/C',
@@ -70,9 +75,14 @@
 		$pdf->Text(76,$y+30,utf8_decode($apart['ciudad']));
 
 		
-		$pdf->Text(13,116.5,'Precio.');
-		$pdf -> Image(__DIR__ .'/../image/price2.png', 38, 109, 35, 12);
-		$pdf->Text(43,116.5,$apart['precio']." ". EURO);
+		$pdf->Text(16,116.5,'Precio.');
+		$pdf -> Image(__DIR__ .'/../image/price2.png', 38, 109, 40, 12);
+		$pdf->Text(41,116.5,round($prom['prom'],2)." ". EURO." /mes");
+
+		$pdf->Text(117,116.5,utf8_decode('Precio m².'));
+		$pdf -> Image(__DIR__ .'/../image/price2.png', 143, 109, 40, 12);
+		$pdf->Text(146,116.5,round($prom['promM'],2)." ". EURO." /mes");
+
 
 		// Detalles
 		$pdf -> Line(10,130,10,154);
@@ -119,29 +129,6 @@
 
 
 		$pdf -> SetFont('Arial', 'B', 14);
-		switch ($des) {
-			case '7'://primer apartamento
-					$pdf->Text(60,34,utf8_decode("Apartamento más cercano a la ubicación"));
-				break;
-			case '8': // economicio
-					$desc = substr($apart['descripcion'], 0, 1200);
-					$pdf->Text(74,34,utf8_decode("Apartamento más económico"));
-					$pdf->SetFontSize(16);
-					$pdf->Text(11,200,utf8_decode("Descripción: "));
-					$pdf -> SetFont('Arial', '', 11);
-					$pdf -> SetY(205);
-					$pdf->MultiCell(0,10,utf8_decode($desc)."...", 0, 'J',false);
-				break;
-			case '9': //costoso
-					$desc = substr($apart['descripcion'], 0, 1200);
-					$pdf->Text(74,34,utf8_decode("Apartamento más costoso"));			
-					$pdf->SetFontSize(16);
-					$pdf->Text(11,200,utf8_decode("Descripción: "));
-					$pdf -> SetFont('Arial', '', 11);
-					$pdf -> SetY(205);
-					$pdf->MultiCell(0,10,utf8_decode($desc)."...", 0, 'J',false);
-				break;
-		}
 	}
 
 	//Portada
@@ -182,7 +169,7 @@
 
 	
 
-	apartamento($pdf, $apart, 7);
+	apartamento($pdf, $apart,[ 'prom' => $prom, 'promM' => $promMetro]);
 
 	//Reporte Global-1
 	$pdf->SetFontSize(16);
@@ -212,8 +199,8 @@
 
 	//apartamentos
 	$pdf -> Line(53,210,53,250);	
-	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 60, 218, 30, 35);
-	$pdf->Text(71,238,$rows);
+	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 62, 218, 30, 35);
+	$pdf->Text(73,238,$rows);
 
 	//edad media
 	$pdf -> Line(100,210,100,250);
@@ -251,8 +238,8 @@
 
 	//ascensor
 	$pdf -> Line(53,270,53,310);	
-	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 60, 278, 30, 35);
-	$pdf->Text(71,297,$elevator);
+	$pdf -> Image(__DIR__ .'/../image/rounded_blue.png', 62, 278, 30, 35);
+	$pdf->Text(73,297,$elevator);
 
 	// balcón
 	$pdf -> Line(100,270,100,310);
@@ -307,22 +294,5 @@
 	}else{
 	    //en caso de haber añadido algun filtro
 	}
-
-	//Pagina apartamento economico
-	$pdf->AddPage();
-
-	headerPdf($pdf);
-
-	apartamento($pdf, $apartmin, 8);
-
-	footer($pdf);
-
-	//pagina aartamento costoso
-	$pdf->AddPage();
-	headerPdf($pdf);
-
-	apartamento($pdf, $apartmax, 9);
-
-	footer($pdf);
 
 	$pdf ->Output('F',$file_name);//

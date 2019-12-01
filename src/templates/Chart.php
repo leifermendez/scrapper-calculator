@@ -35,7 +35,7 @@
 		// Setup slice labels and move them into the plot
 		$p1->value->SetFont(FF_ARIAL);
 		$p1->value->SetColor('#000');
-		$p1->SetLabelPos(0.65);
+		$p1->SetLabelPos(0.5);
 		$p1->SetLegends($name);
 		$p1->SetSliceColors(array("#F27F7F","#85EEF7","#D3D2D2","#FBEB9E"));
 		// Explode all slices
@@ -82,7 +82,7 @@
 		// Setup slice labels and move them into the plot
 		$p1->value->SetFont(FF_ARIAL);
 		$p1->value->SetColor('#000');
-		$p1->SetLabelPos(0.65);
+		$p1->SetLabelPos(0.5);
 		$p1->SetLegends($name);
 		$p1->SetSliceColors(array("#97E895","#D79167","#D3D2D2","#FBEB9E"));
 		// Explode all slices
@@ -114,11 +114,25 @@
             $data[] = $connection->affected_rows;
 		}
 
+		$i=0;
+		$y=0;
+		foreach ($data as $value) {
+			if($value>$i)
+			{
+				$i=$value;
+				$y = $value+5;
+			}
+		}
+
 		$graph = new Graph\Graph(800, 600, 'auto');
-        $graph->setScale("textint");
+        $graph->setScale("textlin",0,$y);
+
         $graph->xaxis->SetFont(FF_ARIAL, FS_NORMAL, 12);
         $graph->yaxis->SetFont(FF_ARIAL, FS_NORMAL, 12);
         $graph->xaxis->setTickLabels($name);
+
+        //$graph->yaxis->SetTickPositions([0,10,20,30,40,50,60,70,80,90,100,150,200,300,400,500]);
+        $graph->yaxis->HideTicks(false,false);
         $p1 = new  Plot\BarPlot($data);
 
         $p1->setFillGradient('#C7FAC4', '#67FC95', GRAD_HOR);
