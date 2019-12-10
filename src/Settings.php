@@ -127,10 +127,24 @@ class Settings
     );
 
 
-    public function __construct()
+    public function __construct($settings = array())
     {
         try {
-            $con = new mysqli (self::$DB_HOST, self::$DB_USER, self::$DB_PASSWORD, self::$DB_NAME, self::$DB_PORT);
+
+            self::$DB_HOST = (isset($settings['DB_HOST'])) ? (isset($settings['DB_HOST'])) : self::$DB_HOST;
+            self::$DB_USER = (isset($settings['DB_USERNAME'])) ? (isset($settings['DB_USERNAME'])) : self::$DB_USER;
+            self::$DB_PASSWORD = (isset($settings['DB_PASSWORD'])) ? (isset($settings['DB_PASSWORD'])) : self::$DB_PASSWORD;
+            self::$DB_NAME = (isset($settings['DB_DATABASE'])) ? (isset($settings['DB_DATABASE'])) : self::$DB_NAME;
+            self::$DB_PORT = (isset($settings['DB_PORT'])) ? (isset($settings['DB_PORT'])) : self::$DB_HOST;
+            self::$DB_TABLE = (isset($settings['DB_TABLE_SCRAPPER'])) ? (isset($settings['DB_TABLE_SCRAPPER'])) : self::$DB_TABLE;
+
+            $con = new mysqli (
+                self::$DB_HOST,
+                self::$DB_USER,
+                self::$DB_PASSWORD,
+                self::$DB_NAME,
+                self::$DB_PORT
+            );
             if ($con->connect_error) {
                 throw new Exception($con->connect_error);
             }

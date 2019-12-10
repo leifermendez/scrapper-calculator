@@ -25,7 +25,7 @@ class Calculator extends Settings
 
     public function __construct($settings = array())
     {
-        $this->connection = parent::__construct();
+        $this->connection = parent::__construct($settings);
         self::$ERROR = new Errores();
 
         try {
