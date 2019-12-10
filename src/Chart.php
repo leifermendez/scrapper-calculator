@@ -6,7 +6,7 @@
  * Collaborator: arturoluna879@gmail.com
  */
 
-namespace leifermendez\scrapper_calculator;
+namespace leifermendez\rbs_accommodations;
 
 use Exception;
 use mysqli;

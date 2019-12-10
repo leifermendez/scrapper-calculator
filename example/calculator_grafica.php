@@ -2,7 +2,7 @@
 
 include __DIR__ . "/../vendor/autoload.php";
 
-use leifermendez\scrapper_calculator\Chart;
+use leifermendez\rbs_accommodations\Chart;
 
 $grafica = new Chart();
 $grafica->calculatorGrafica('global',
