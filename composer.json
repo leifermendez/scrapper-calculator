@@ -15,7 +15,7 @@
   },
   "autoload": {
     "psr-4": {
-      "leifermendez\\scrapper_calculator\\": "src/"
+      "leifermendez\\rbs_accommodations\\": "src/"
     }
   }
 }

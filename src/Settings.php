@@ -4,7 +4,7 @@
  * Class Ajustes
  */
 
-namespace leifermendez\scrapper_calculator;
+namespace leifermendez\rbs_accommodations;
 
 use Exception;
 use mysqli;

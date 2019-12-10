@@ -1,6 +1,6 @@
 <?php
 
-namespace leifermendez\scrapper_calculator;
+namespace leifermendez\rbs_accommodations;
 
 use Exception;
 

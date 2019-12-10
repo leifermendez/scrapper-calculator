@@ -24,7 +24,7 @@ El sistema es capaz de realizar 3 funciones, importar un archivo CSV, generar un
 
 include __DIR__ . "/../vendor/autoload.php";
 
-use leifermendez\scrapper_calculator\Calculator;
+use leifermendez\rbs_accommodations\Calculator;
 
 $calculator = new Calculator();
 $file = __DIR__ . '/../csv/2019-10-02T071802.756Z_alquiler-viviendas_madrid_villa-de-vallecas_ensanche-de-vallecas-la-gavia.csv';
@@ -41,7 +41,7 @@ var_dump($res);
 
 include __DIR__ . "/../vendor/autoload.php";
 
-use leifermendez\scrapper_calculator\Calculator;
+use leifermendez\rbs_accommodations\Calculator;
 
 $calculator = new Calculator();
 $calculator->calculator(
@@ -61,7 +61,7 @@ var_dump($calculator);
 
 include __DIR__ . "/../vendor/autoload.php";
 
-use leifermendez\scrapper_calculator\Calculator;
+use leifermendez\rbs_accommodations\Calculator;
 
 $calculator = new Calculator();
 $calculator->calculator(

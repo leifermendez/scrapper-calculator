@@ -1,6 +1,6 @@
 <?php
 
-namespace leifermendez\scrapper_calculator;
+namespace leifermendez\rbs_accommodations;
 class Errores
 {
     public $ERROR_NOT_FOUND_FILE_CSV = 'El archivo CSV no existe';

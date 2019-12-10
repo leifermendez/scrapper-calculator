@@ -6,13 +6,13 @@
  * Collaborator: arturoluna879@gmail.com
  */
 
-namespace leifermendez\scrapper_calculator;
+namespace leifermendez\rbs_accommodations;
 
 use Exception;
 use mysqli;
 use Fpdf\Fpdf;
-use leifermendez\scrapper_calculator\Tools;
-use leifermendez\scrapper_calculator\Errores;
+use leifermendez\rbs_accommodations\Tools;
+use leifermendez\rbs_accommodations\Errores;
 
 class Calculator extends Settings
 {
@@ -23,14 +23,14 @@ class Calculator extends Settings
     public $table_name;
     public $TOOLS;
 
-    public function __construct()
+    public function __construct($settings = array())
     {
         $this->connection = parent::__construct();
         self::$ERROR = new Errores();
 
         try {
-            $this->db_name = parent::$DB_NAME;
-            $this->table_name = parent::$DB_TABLE;
+            $this->db_name = (isset($settings['DB_NAME'])) ? $settings['DB_NAME'] : parent::$DB_NAME;
+            $this->table_name = (isset($settings['DB_TABLE'])) ? $settings['DB_TABLE'] : parent::$DB_NAME;
             $this->TOOLS = new Tools();
 
         } catch (\Exception $e) {
@@ -84,9 +84,9 @@ class Calculator extends Settings
         $price = 0;
         $average = 0.0;
         $list_data = array();
-        
+
         $file_name .= "/" . parent::$REPORT_FILENAME . time() . ".pdf";
-        if (!count($filters)) {                    
+        if (!count($filters)) {
             $sql = $this->TOOLS->SQLRange($lat, $lng, $measure);
         } else {
             $sql = $this->TOOLS->SQLRange($lat, $lng, $measure, $filters);
@@ -104,6 +104,6 @@ class Calculator extends Settings
             echo self::$ERROR->MSG_SUCCESS . ": \n" . $file_name;
             return $file_name;
         }
-        
+
     }
 }
